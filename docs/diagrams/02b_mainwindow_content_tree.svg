@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900">
+  <defs>
+    <style>
+      .title{font:700 32px 'Malgun Gothic',Arial;fill:#17324f}.sub{font:500 17px 'Malgun Gothic',Arial;fill:#536b85}
+      .tag{font:700 20px Consolas,'Malgun Gothic';fill:#17324f}.h{font:700 20px 'Malgun Gothic',Arial;fill:#17324f}
+      .t{font:600 15px 'Malgun Gothic',Arial;fill:#536b85}.panel{fill:#fff;stroke:#b7d0ea;stroke-width:2}
+      .node{fill:#dff4ff;stroke:#3479a6;stroke-width:2}.node2{fill:#f7fbff;stroke:#8aa9c7;stroke-width:2}
+      .blue{fill:#1a54af;stroke:#123d82;stroke-width:2}.bg{fill:#eaf8fb}.line{stroke:#34495e;stroke-width:2.3;fill:none}
+    </style>
+    <marker id="arr" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M1,1 L9,5 L1,9 Z" fill="#34495e"/></marker>
+  </defs>
+  <rect width="1400" height="900" class="bg"/>
+  <text x="70" y="70" class="title">MainWindow Visual Tree 2/2: Sidebar and Tabs</text>
+  <text x="72" y="104" class="sub">This page expands the two body columns from the first diagram.</text>
+
+  <rect x="85" y="145" width="500" height="625" rx="18" class="panel"/>
+  <rect x="120" y="180" width="430" height="58" rx="10" class="blue"/><text x="210" y="216" class="tag" fill="#fff">&lt;Border Sidebar&gt;</text>
+  <line x1="335" y1="238" x2="335" y2="290" class="line" marker-end="url(#arr)"/>
+  <rect x="170" y="290" width="330" height="54" rx="10" class="node"/><text x="230" y="324" class="tag">&lt;ScrollViewer&gt;</text>
+  <line x1="335" y1="344" x2="335" y2="395" class="line" marker-end="url(#arr)"/>
+  <rect x="170" y="395" width="330" height="54" rx="10" class="node"/><text x="245" y="429" class="tag">&lt;StackPanel&gt;</text>
+  <line x1="335" y1="449" x2="335" y2="505" class="line"/>
+  <rect x="135" y="505" width="180" height="56" rx="9" class="node2"/><text x="178" y="539" class="h">PLC status</text>
+  <rect x="355" y="505" width="180" height="56" rx="9" class="node2"/><text x="401" y="539" class="h">Run mode</text>
+  <rect x="135" y="595" width="180" height="56" rx="9" class="node2"/><text x="174" y="629" class="h">Counters</text>
+  <rect x="355" y="595" width="180" height="56" rx="9" class="node2"/><text x="406" y="629" class="h">Vision</text>
+  <text x="125" y="715" class="t">Sidebar keeps common control and summary widgets visible.</text>
+
+  <rect x="655" y="145" width="660" height="625" rx="18" class="panel"/>
+  <rect x="850" y="180" width="270" height="58" rx="10" class="node"/><text x="905" y="216" class="tag">&lt;TabControl&gt;</text>
+  <line x1="985" y1="238" x2="985" y2="295" class="line" marker-end="url(#arr)"/>
+  <rect x="800" y="295" width="370" height="54" rx="10" class="node"/><text x="895" y="329" class="tag">&lt;TabItem&gt; list</text>
+
+  <rect x="700" y="400" width="180" height="58" rx="9" class="node2"/><text x="735" y="424" class="h">Monitoring</text><text x="730" y="448" class="t">MonitorView</text>
+  <rect x="895" y="400" width="180" height="58" rx="9" class="node2"/><text x="935" y="424" class="h">Vision</text><text x="910" y="448" class="t">VisionInspectionView</text>
+  <rect x="1090" y="400" width="180" height="58" rx="9" class="node2"/><text x="1122" y="424" class="h">Manual</text><text x="1110" y="448" class="t">ManualControlView</text>
+
+  <rect x="700" y="500" width="180" height="58" rx="9" class="node2"/><text x="735" y="524" class="h">Quality</text><text x="718" y="548" class="t">QualityAnalysisView</text>
+  <rect x="895" y="500" width="180" height="58" rx="9" class="node2"/><text x="925" y="524" class="h">Production</text><text x="910" y="548" class="t">ProductionStatusView</text>
+  <rect x="1090" y="500" width="180" height="58" rx="9" class="node2"/><text x="1130" y="524" class="h">DB Search</text><text x="1122" y="548" class="t">DbSearchView</text>
+
+  <rect x="805" y="600" width="220" height="58" rx="9" class="node2"/><text x="850" y="624" class="h">History</text><text x="832" y="648" class="t">ProductionHistoryView</text>
+  <rect x="1045" y="600" width="180" height="58" rx="9" class="node2"/><text x="1080" y="624" class="h">Event Log</text><text x="1080" y="648" class="t">EventLogView</text>
+  <text x="705" y="715" class="t">Each tab owns one UserControl and receives its matching ViewModel binding.</text>
+
+  <text x="70" y="850" class="sub">Figure 2-b. Sidebar expands into common widgets; TabControl maps tabs to UserControls.</text>
+</svg>

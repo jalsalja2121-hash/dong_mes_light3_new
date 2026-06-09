@@ -1,0 +1,8 @@
+# Python runtime dependencies for inference_server.py.
+# setup_python_env.bat installs CPU PyTorch first, then installs this file.
+torch
+torchvision
+ultralytics
+pillow
+opencv-python
+numpy

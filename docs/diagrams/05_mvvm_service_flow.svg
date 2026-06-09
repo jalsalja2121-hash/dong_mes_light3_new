@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900">
+  <defs>
+    <style>
+      .title{font:700 32px 'Malgun Gothic',Arial;fill:#17324f}.sub{font:500 17px 'Malgun Gothic',Arial;fill:#536b85}
+      .h{font:700 20px 'Malgun Gothic',Arial;fill:#17324f}.t{font:600 16px 'Malgun Gothic',Arial;fill:#536b85}
+      .box{fill:#fff;stroke:#b7d0ea;stroke-width:2}.vm{fill:#dff4ff;stroke:#3479a6;stroke-width:2}
+      .svc{fill:#e8f0ff;stroke:#456ba6;stroke-width:2}.hw{fill:#fff7e6;stroke:#c8952d;stroke-width:2}.db{fill:#eefbea;stroke:#5aa354;stroke-width:2}
+      .bg{fill:#eaf8fb}.line{stroke:#34495e;stroke-width:2.4;fill:none}.dash{stroke:#607d8b;stroke-width:2.2;stroke-dasharray:8 6;fill:none}
+    </style>
+    <marker id="arr" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M1,1 L9,5 L1,9 Z" fill="#34495e"/></marker>
+  </defs>
+  <rect width="1400" height="900" class="bg"/>
+  <text x="70" y="70" class="title">MVVM and Service Runtime Flow</text>
+  <text x="72" y="104" class="sub">Dependency injection creates services and view models; events push runtime data.</text>
+  <rect x="90" y="160" width="230" height="80" rx="10" class="box"/><text x="125" y="198" class="h">App.xaml.cs</text><text x="125" y="225" class="t">DI registration</text>
+  <rect x="430" y="145" width="270" height="110" rx="10" class="vm"/><text x="470" y="185" class="h">MainViewModel</text><text x="470" y="215" class="t">Commands and shared state</text>
+  <line x1="320" y1="200" x2="430" y2="200" class="line" marker-end="url(#arr)"/>
+  <rect x="800" y="120" width="240" height="80" rx="10" class="svc"/><text x="842" y="158" class="h">IPlcService</text><text x="842" y="185" class="t">DataRefreshed</text>
+  <rect x="800" y="230" width="240" height="80" rx="10" class="svc"/><text x="842" y="268" class="h">IVisionService</text><text x="842" y="295" class="t">Frame / Result events</text>
+  <rect x="1120" y="120" width="210" height="80" rx="10" class="hw"/><text x="1200" y="158" class="h">PLC</text><text x="1162" y="185" class="t">MX Component</text>
+  <rect x="1120" y="230" width="210" height="80" rx="10" class="hw"/><text x="1152" y="268" class="h">Camera + Python</text><text x="1160" y="295" class="t">OpenCV / YOLO</text>
+  <line x1="700" y1="180" x2="800" y2="160" class="line" marker-end="url(#arr)"/><line x1="700" y1="220" x2="800" y2="270" class="line" marker-end="url(#arr)"/>
+  <line x1="1040" y1="160" x2="1120" y2="160" class="line" marker-end="url(#arr)"/><line x1="1040" y1="270" x2="1120" y2="270" class="line" marker-end="url(#arr)"/>
+  <rect x="130" y="410" width="310" height="190" rx="10" class="vm"/><text x="165" y="450" class="h">Sub ViewModels</text><text x="165" y="485" class="t">Monitor / Vision / Manual</text><text x="165" y="515" class="t">Quality / Status / DB</text><text x="165" y="545" class="t">History / EventLog</text>
+  <rect x="545" y="410" width="310" height="190" rx="10" class="svc"/><text x="585" y="450" class="h">MesDataService</text><text x="585" y="485" class="t">Detects production changes</text><text x="585" y="515" class="t">Triggers auto inspection</text><text x="585" y="545" class="t">Saves history and snapshots</text>
+  <rect x="960" y="410" width="310" height="190" rx="10" class="db"/><text x="995" y="450" class="h">Repositories + MySQL</text><text x="995" y="485" class="t">Production history</text><text x="995" y="515" class="t">Vision inspection</text><text x="995" y="545" class="t">Event log / PLC snapshot</text>
+  <line x1="565" y1="255" x2="285" y2="410" class="dash" marker-end="url(#arr)"/><line x1="920" y1="200" x2="700" y2="410" class="dash" marker-end="url(#arr)"/><line x1="920" y1="310" x2="700" y2="410" class="dash" marker-end="url(#arr)"/>
+  <line x1="855" y1="505" x2="960" y2="505" class="line" marker-end="url(#arr)"/><line x1="440" y1="505" x2="545" y2="505" class="dash" marker-end="url(#arr)"/>
+  <rect x="235" y="700" width="930" height="95" rx="12" class="box"/><text x="270" y="738" class="h">Event flow summary</text><text x="270" y="768" class="t">PLC DataRefreshed updates UI and lets MesDataService decide whether to save production data.</text><text x="270" y="795" class="t">Vision InspectionCompleted updates the result UI and gives MesDataService the latest inspection result.</text>
+  <text x="70" y="850" class="sub">Figure 5. Runtime dependencies and event-driven data propagation.</text>
+</svg>

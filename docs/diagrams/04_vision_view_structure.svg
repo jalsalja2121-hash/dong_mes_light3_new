@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900">
+  <defs><style>
+    .title{font:700 32px 'Malgun Gothic',Arial;fill:#17324f}.sub{font:500 17px 'Malgun Gothic',Arial;fill:#536b85}
+    .h{font:700 20px 'Malgun Gothic',Arial;fill:#17324f}.t{font:600 16px 'Malgun Gothic',Arial;fill:#536b85}
+    .panel{fill:#fff;stroke:#b7d0ea;stroke-width:2}.card{fill:#f7fbff;stroke:#b7d0ea;stroke-width:2}
+    .blue{fill:#1a54af}.dark{fill:#0d1520;stroke:#d0ddef;stroke-width:2}.bg{fill:#eaf8fb}.ok{fill:#1b9442}.ng{fill:#df2a2f}
+  </style></defs>
+  <rect width="1400" height="900" class="bg"/>
+  <text x="70" y="70" class="title">VisionInspectionView Structure</text>
+  <text x="72" y="104" class="sub">Camera control, preview, inspection history, and result summary.</text>
+  <rect x="85" y="145" width="1230" height="640" rx="18" class="panel"/>
+  <rect x="120" y="180" width="805" height="82" rx="12" class="card"/><text x="150" y="215" class="h">Camera and model controls</text><text x="150" y="245" class="t">Camera ComboBox, scan, connect, model load, capture + inspect</text>
+  <rect x="120" y="290" width="805" height="300" rx="12" class="dark"/><text x="420" y="445" class="h" fill="#dbeafe">Image preview</text><text x="360" y="478" class="t" fill="#9db7d5">CurrentFrame from FrameCaptured event</text>
+  <rect x="120" y="620" width="805" height="125" rx="12" class="card"/><rect x="120" y="620" width="805" height="42" rx="12" class="blue"/><text x="150" y="648" class="h" fill="#fff">Recent inspection DataGrid</text><text x="150" y="705" class="t">Columns: time, result, defect type, confidence</text>
+  <rect x="970" y="180" width="305" height="565" rx="12" class="card"/><text x="1000" y="218" class="h">Result panel</text>
+  <rect x="1000" y="250" width="245" height="90" rx="10" fill="#eef5ff" stroke="#6f8db2" stroke-width="2"/><text x="1065" y="307" style="font:800 42px 'Malgun Gothic';fill:#6680a4">WAIT</text>
+  <rect x="1000" y="365" width="245" height="95" rx="8" fill="#fff" stroke="#d0ddef" stroke-width="2"/><text x="1025" y="400" class="t">Defect type</text><text x="1025" y="435" class="t">Confidence</text>
+  <rect x="1000" y="500" width="112" height="130" rx="10" class="ok"/><text x="1035" y="552" style="font:800 30px Consolas;fill:#fff">OK</text><text x="1038" y="610" style="font:800 48px Consolas;fill:#fff">0</text>
+  <rect x="1133" y="500" width="112" height="130" rx="10" class="ng"/><text x="1166" y="552" style="font:800 30px Consolas;fill:#fff">NG</text><text x="1170" y="610" style="font:800 48px Consolas;fill:#fff">0</text>
+  <text x="1000" y="690" class="t">ViewModel: VisionInspectionViewModel</text><text x="1000" y="720" class="t">Services: IVisionService, IVisionRepository</text>
+  <text x="70" y="850" class="sub">Figure 4. The vision view separates acquisition controls, live image, history, and judgment summary.</text>
+</svg>

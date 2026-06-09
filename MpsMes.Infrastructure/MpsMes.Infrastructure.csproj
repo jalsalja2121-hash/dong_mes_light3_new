@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>MpsMes.Infrastructure</RootNamespace>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <!-- MX Component 5.0 은 32비트 COM → x86 필수 -->
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MpsMes.Core\MpsMes.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- DB : MySQL -->
+    <PackageReference Include="Dapper"                        Version="2.1.35"  />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.5" />
+    <PackageReference Include="MySqlConnector"                Version="2.3.7"   />
+
+    <!-- 카메라 (Logitech C922 - OpenCvSharp4) -->
+    <PackageReference Include="OpenCvSharp4"                  Version="4.9.0.20240103" />
+    <PackageReference Include="OpenCvSharp4.runtime.win"      Version="4.9.0.20240103" />
+    <PackageReference Include="OpenCvSharp4.Extensions"       Version="4.9.0.20240103" />
+
+    <!-- Python.NET 제거 → 별도 프로세스(inference_server.py) TCP 소켓으로 대체 -->
+    <!--  x86(MES) ↔ x64(Python) 비트 충돌 해결 -->
+
+    <!--
+      MX Component 5.0 은 NuGet 없음 → 설치 후 COM 참조 수동 추가
+      VS → Add COM Reference → ActUtlType 5.0 Type Library 선택
+      ※ 5.0 설치 경로 기본값: C:\Program Files (x86)\MELSOFT\MX Component\
+      ※ 4.xx 대비 API 동일 → 코드 수정 불필요
+    -->
+  </ItemGroup>
+</Project>

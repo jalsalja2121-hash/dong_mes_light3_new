@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900">
+  <defs><style>
+    .title{font:700 32px 'Malgun Gothic',Arial;fill:#17324f}.sub{font:500 17px 'Malgun Gothic',Arial;fill:#536b85}
+    .h{font:700 20px 'Malgun Gothic',Arial;fill:#17324f}.t{font:600 16px 'Malgun Gothic',Arial;fill:#536b85}
+    .panel{fill:#fff;stroke:#b7d0ea;stroke-width:2}.card{fill:#f7fbff;stroke:#b7d0ea;stroke-width:2}
+    .blue{fill:#1a54af}.cyan{fill:#2e6fd4}.bg{fill:#eaf8fb}.active{fill:#1a54af;stroke:#123d82;stroke-width:2}.step{fill:#f4f7fb;stroke:#d0ddef;stroke-width:2}
+  </style></defs>
+  <rect width="1400" height="900" class="bg"/>
+  <text x="70" y="70" class="title">MonitorView Structure</text>
+  <text x="72" y="104" class="sub">PLC live view: counters, I/O status, and sequence chips.</text>
+  <rect x="85" y="145" width="1230" height="640" rx="18" class="panel"/>
+  <rect x="120" y="180" width="1170" height="52" rx="10" class="blue"/><text x="150" y="214" class="h" fill="#fff">PLC Live Monitoring</text>
+  <rect x="120" y="270" width="270" height="110" rx="12" class="card"/><text x="148" y="310" class="t">KPI</text><text x="148" y="345" class="h">Metal count</text>
+  <rect x="415" y="270" width="270" height="110" rx="12" class="card"/><text x="443" y="310" class="t">KPI</text><text x="443" y="345" class="h">Non-metal count</text>
+  <rect x="710" y="270" width="270" height="110" rx="12" class="card"/><text x="738" y="310" class="t">KPI</text><text x="738" y="345" class="h">Total count</text>
+  <rect x="1005" y="270" width="270" height="110" rx="12" class="card"/><text x="1033" y="310" class="t">KPI</text><text x="1033" y="345" class="h">Servo position</text>
+
+  <rect x="120" y="425" width="565" height="185" rx="12" class="card"/><rect x="120" y="425" width="565" height="46" rx="12" class="blue"/>
+  <text x="150" y="456" class="h" fill="#fff">Input signals X00 - X13</text><text x="150" y="510" class="t">LED Ellipse + sensor label list</text><text x="150" y="545" class="t">Bound to MonitorViewModel boolean properties</text>
+  <rect x="710" y="425" width="565" height="185" rx="12" class="card"/><rect x="710" y="425" width="565" height="46" rx="12" class="cyan"/>
+  <text x="740" y="456" class="h" fill="#fff">Output signals Y20 - Y2E</text><text x="740" y="510" class="t">Motor, conveyor, cylinder, suction outputs</text><text x="740" y="545" class="t">Also rendered as LED status rows</text>
+
+  <rect x="120" y="650" width="1155" height="105" rx="12" class="card"/><rect x="120" y="650" width="1155" height="42" rx="12" class="blue"/>
+  <text x="150" y="678" class="h" fill="#fff">Current sequence</text>
+  <rect x="150" y="715" width="90" height="34" rx="7" class="step"/><text x="180" y="738" class="t">Stop</text>
+  <rect x="255" y="715" width="90" height="34" rx="7" class="step"/><text x="284" y="738" class="t">Reset</text>
+  <rect x="360" y="715" width="90" height="34" rx="7" class="step"/><text x="390" y="738" class="t">Wait</text>
+  <rect x="465" y="715" width="90" height="34" rx="7" class="active"/><text x="493" y="738" class="t" fill="#fff">Start</text>
+  <rect x="570" y="715" width="130" height="34" rx="7" class="step"/><text x="598" y="738" class="t">Supply</text>
+  <rect x="715" y="715" width="130" height="34" rx="7" class="step"/><text x="743" y="738" class="t">Process</text>
+  <rect x="860" y="715" width="130" height="34" rx="7" class="step"/><text x="895" y="738" class="t">Eject</text>
+  <rect x="1005" y="715" width="130" height="34" rx="7" class="step"/><text x="1038" y="738" class="t">Store</text>
+  <rect x="1150" y="715" width="90" height="34" rx="7" class="step"/><text x="1175" y="738" class="t">Done</text>
+  <text x="70" y="850" class="sub">Figure 3. MonitorView uses cards for live values and color chips for the active sequence step.</text>
+</svg>

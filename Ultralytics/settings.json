@@ -1,0 +1,21 @@
+{
+  "settings_version": "0.0.6",
+  "datasets_dir": "C:\\project\\dong_mes_light3\\datasets",
+  "weights_dir": "weights",
+  "runs_dir": "runs",
+  "uuid": "29d43763c29257fe071f1228ed62e3018a888b53661c0a5d5c6cdc5cbc5da0f4",
+  "sync": true,
+  "api_key": "",
+  "openai_api_key": "",
+  "clearml": true,
+  "comet": true,
+  "dvc": true,
+  "hub": true,
+  "mlflow": true,
+  "neptune": true,
+  "raytune": true,
+  "tensorboard": false,
+  "wandb": false,
+  "vscode_msg": true,
+  "openvino_msg": true
+}

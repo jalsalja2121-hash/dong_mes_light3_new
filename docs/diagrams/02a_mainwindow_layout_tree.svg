@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="850" viewBox="0 0 1400 850">
+  <defs>
+    <style>
+      .title{font:700 32px 'Malgun Gothic',Arial;fill:#17324f}.sub{font:500 17px 'Malgun Gothic',Arial;fill:#536b85}
+      .tag{font:700 22px Consolas,'Malgun Gothic';fill:#17324f}.label{font:600 16px 'Malgun Gothic',Arial;fill:#536b85}
+      .node{fill:#e8f0ff;stroke:#4f76b6;stroke-width:2}.node2{fill:#fff;stroke:#8fb5dd;stroke-width:2}
+      .blue{fill:#1a54af;stroke:#123d82;stroke-width:2}.panel{fill:#fff;stroke:#b7d0ea;stroke-width:2}.bg{fill:#eaf8fb}
+      .line{stroke:#34495e;stroke-width:2.5;fill:none}
+    </style>
+    <marker id="arr" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M1,1 L9,5 L1,9 Z" fill="#34495e"/></marker>
+  </defs>
+  <rect width="1400" height="850" class="bg"/>
+  <text x="70" y="70" class="title">MainWindow Visual Tree 1/2: Layout Split</text>
+  <text x="72" y="104" class="sub">This page shows only the large containers that divide the window.</text>
+  <rect x="105" y="145" width="1190" height="590" rx="18" class="panel"/>
+
+  <rect x="545" y="185" width="310" height="64" rx="10" class="node"/><text x="627" y="224" class="tag">&lt;Window&gt;</text>
+  <line x1="700" y1="249" x2="700" y2="300" class="line" marker-end="url(#arr)"/>
+  <rect x="545" y="300" width="310" height="64" rx="10" class="node"/><text x="653" y="339" class="tag">&lt;Grid&gt;</text>
+  <text x="875" y="338" class="label">two rows</text>
+
+  <line x1="700" y1="364" x2="700" y2="420" class="line"/>
+  <line x1="350" y1="420" x2="1050" y2="420" class="line"/>
+  <line x1="350" y1="420" x2="350" y2="475" class="line" marker-end="url(#arr)"/>
+  <line x1="1050" y1="420" x2="1050" y2="475" class="line" marker-end="url(#arr)"/>
+
+  <rect x="190" y="475" width="320" height="70" rx="10" class="blue"/><text x="260" y="518" class="tag" fill="#fff">&lt;Border&gt;</text>
+  <text x="225" y="580" class="label">Row 0: header band</text>
+
+  <rect x="890" y="475" width="320" height="70" rx="10" class="node2"/><text x="1005" y="518" class="tag">&lt;Grid&gt;</text>
+  <text x="928" y="580" class="label">Row 1: body with two columns</text>
+
+  <line x1="1050" y1="545" x2="1050" y2="620" class="line"/>
+  <line x1="850" y1="620" x2="1250" y2="620" class="line"/>
+  <line x1="850" y1="620" x2="850" y2="675" class="line" marker-end="url(#arr)"/>
+  <line x1="1250" y1="620" x2="1250" y2="675" class="line" marker-end="url(#arr)"/>
+  <rect x="710" y="675" width="280" height="64" rx="10" class="node"/><text x="772" y="714" class="tag">&lt;Border&gt;</text>
+  <text x="745" y="770" class="label">Column 0: sidebar</text>
+  <rect x="1110" y="675" width="280" height="64" rx="10" class="node"/><text x="1192" y="714" class="tag">&lt;Grid&gt;</text>
+  <text x="1147" y="770" class="label">Column 1: tab content</text>
+
+  <text x="70" y="815" class="sub">Figure 2-a. The root Grid creates a stable header and a two-column body.</text>
+</svg>

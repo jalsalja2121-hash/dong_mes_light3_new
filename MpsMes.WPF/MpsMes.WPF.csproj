@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <RootNamespace>MpsMes.WPF</RootNamespace>
+    <AssemblyName>MpsMes</AssemblyName>
+    <!-- MX Component 5.0 은 32비트 COM → x86 필수 -->
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MpsMes.Core\MpsMes.Core.csproj" />
+    <ProjectReference Include="..\MpsMes.Infrastructure\MpsMes.Infrastructure.csproj" />
+    <ProjectReference Include="..\MpsMes.Services\MpsMes.Services.csproj" />
+    <ProjectReference Include="..\MpsMes.ViewModels\MpsMes.ViewModels.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm"                    Version="8.4.2"  />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.5" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json"  Version="10.0.5" />
+    <PackageReference Include="LiveChartsCore.SkiaSharpView.WPF"         Version="2.0.0-rc2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <!-- 비전 추론 서버: 빌드 출력 폴더에 자동 복사 -->
+    <None Include="..\inference_server.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="..\2class_best.pt" Link="Models\2class_best.pt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,519 @@
+<UserControl x:Class="MpsMes.WPF.Views.QualityAnalysisView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:conv="clr-namespace:MpsMes.WPF.Converters"
+             Background="{StaticResource Bg_Main}"
+             TextElement.Foreground="{StaticResource Text_Primary}">
+    <UserControl.Resources>
+        <conv:PercentageConverter  x:Key="Pct"/>
+        <conv:BarHeightConverter   x:Key="BarHeight"/>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <Grid Margin="16,14">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/> <!-- 0: 타이틀 -->
+            <RowDefinition Height="Auto"/> <!-- 1: KPI 4개 -->
+            <RowDefinition Height="Auto"/> <!-- 2: 파손 분류 카드 -->
+            <RowDefinition Height="Auto"/> <!-- 3: 도넛 2개 -->
+            <RowDefinition Height="Auto"/> <!-- 3: 시간대 막대 -->
+            <RowDefinition Height="Auto"/> <!-- 4: 3개 요약 카드 -->
+            <RowDefinition Height="Auto"/> <!-- 5: 상세 테이블 -->
+        </Grid.RowDefinitions>
+
+        <!-- ══ 0. 타이틀 ══ -->
+        <Grid Grid.Row="0" Margin="0,0,0,14">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <Border Width="4" Height="20" CornerRadius="2"
+                        Background="{StaticResource Accent_Blue}" Margin="0,0,10,0"/>
+                <TextBlock Text="비전검사 품질 분석" FontSize="17" FontWeight="Bold"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                <TextBlock Text="마지막 갱신: " FontSize="12"
+                           Foreground="{StaticResource Text_Muted}" VerticalAlignment="Center"/>
+                <TextBlock Text="{Binding LastRefresh}" FontSize="12" FontWeight="Bold"
+                           Foreground="{StaticResource Accent_Blue}"
+                           VerticalAlignment="Center" Margin="0,0,14,0"/>
+                <Button Content="새로고침" Style="{StaticResource Btn_Blue}"
+                        Command="{Binding RefreshCommand}" Height="32" Padding="16,0"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- ══ 1. KPI 카드 4개 ══ -->
+        <Grid Grid.Row="1" Margin="0,0,0,12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/><ColumnDefinition/><ColumnDefinition/><ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <!-- 총 검사 수 -->
+            <Border Grid.Column="0" Background="{StaticResource Bg_Card}"
+                    BorderBrush="{StaticResource Accent_Blue}" BorderThickness="0,4,0,0"
+                    CornerRadius="8" Margin="0,0,5,0" Padding="18,14">
+                <StackPanel>
+                    <TextBlock Text="총 검사 수" FontSize="12" Foreground="{StaticResource Text_Muted}"/>
+                    <TextBlock Text="{Binding TotalCount}" FontSize="36" FontWeight="Black"
+                               FontFamily="Consolas" Foreground="{StaticResource Accent_Blue}" Margin="0,6,0,2"/>
+                    <TextBlock Text="건" FontSize="11" Foreground="{StaticResource Text_Muted}"/>
+                </StackPanel>
+            </Border>
+
+            <!-- OK 건수 -->
+            <Border Grid.Column="1" Background="{StaticResource Bg_Card}"
+                    BorderBrush="{StaticResource Color_OK}" BorderThickness="0,4,0,0"
+                    CornerRadius="8" Margin="3,0,3,0" Padding="18,14">
+                <StackPanel>
+                    <TextBlock Text="OK 건수" FontSize="12" Foreground="{StaticResource Text_Muted}"/>
+                    <TextBlock Text="{Binding OkCount}" FontSize="36" FontWeight="Black"
+                               FontFamily="Consolas" Foreground="{StaticResource Color_OK}" Margin="0,6,0,2"/>
+                    <TextBlock Text="건" FontSize="11" Foreground="{StaticResource Text_Muted}"/>
+                </StackPanel>
+            </Border>
+
+            <!-- NG 건수 -->
+            <Border Grid.Column="2" Background="#FFF5E8E8"
+                    BorderBrush="{StaticResource Color_NG}" BorderThickness="0,4,0,0"
+                    CornerRadius="8" Margin="3,0,3,0" Padding="18,14">
+                <StackPanel>
+                    <TextBlock Text="NG 건수" FontSize="12" Foreground="{StaticResource Text_Muted}"/>
+                    <TextBlock Text="{Binding NgCount}" FontSize="36" FontWeight="Black"
+                               FontFamily="Consolas" Foreground="{StaticResource Color_NG}" Margin="0,6,0,2"/>
+                    <TextBlock Text="건" FontSize="11" Foreground="{StaticResource Text_Muted}"/>
+                </StackPanel>
+            </Border>
+
+            <!-- 불량률 -->
+            <Border Grid.Column="3" Background="{StaticResource Bg_Card}"
+                    BorderBrush="{StaticResource Color_NG}" BorderThickness="0,4,0,0"
+                    CornerRadius="8" Margin="5,0,0,0" Padding="18,14">
+                <StackPanel>
+                    <TextBlock Text="불량률" FontSize="12" Foreground="{StaticResource Text_Muted}"/>
+                    <TextBlock Text="{Binding NgRate, Converter={StaticResource Pct}}"
+                               FontSize="36" FontWeight="Black" FontFamily="Consolas"
+                               Foreground="{StaticResource Color_NG}" Margin="0,6,0,2"/>
+                    <TextBlock Text="(NG/전체 기준 통합)" FontSize="10" Foreground="{StaticResource Text_Muted}"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- ══ 2. 파손 분류 카드 ══ -->
+        <Grid Grid.Row="2" Margin="0,0,0,12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/><ColumnDefinition/><ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <!-- NG 합계 -->
+            <Border Grid.Column="0" Background="#FFF5E8E8"
+                    BorderBrush="{StaticResource Color_NG}" BorderThickness="1"
+                    CornerRadius="8" Margin="0,0,5,0" Padding="18,14">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel>
+                        <TextBlock Text="NG 합계" FontSize="12"
+                                   Foreground="{StaticResource Text_Muted}"/>
+                        <TextBlock Text="{Binding NgCount}" FontSize="34" FontWeight="Black"
+                                   FontFamily="Consolas" Foreground="{StaticResource Color_NG}"
+                                   Margin="0,6,0,0"/>
+                        <TextBlock Text="건" FontSize="11" Foreground="{StaticResource Text_Muted}"/>
+                    </StackPanel>
+                    <Border Grid.Column="1" Background="{StaticResource Color_NG}"
+                            CornerRadius="50" Width="42" Height="42"
+                            VerticalAlignment="Center">
+                        <TextBlock Text="✗" FontSize="20" FontWeight="Black"
+                                   Foreground="White"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <!-- 금속 검사 -->
+            <Border Grid.Column="1" Background="{StaticResource Bg_Card}"
+                    BorderBrush="{StaticResource Accent_Blue}" BorderThickness="1"
+                    CornerRadius="8" Margin="3,0,3,0" Padding="18,14">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel>
+                        <TextBlock Text="금속 NG" FontSize="12"
+                                   Foreground="{StaticResource Text_Muted}"/>
+                        <TextBlock Text="{Binding MetalDamageCount}" FontSize="34" FontWeight="Black"
+                                   FontFamily="Consolas" Foreground="{StaticResource Accent_Blue}"
+                                   Margin="0,6,0,0"/>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="건  " FontSize="11" Foreground="{StaticResource Text_Muted}"/>
+                            <TextBlock FontSize="11" Foreground="{StaticResource Text_Muted}">
+                                <Run Text="{Binding MetalDamageCount, StringFormat={}{0}}"/>
+                                <Run Text=" / "/>
+                                <Run Text="{Binding NgCount}"/>
+                                <Run Text=" NG"/>
+                            </TextBlock>
+                        </StackPanel>
+                        <TextBlock FontSize="11" Foreground="{StaticResource Text_Muted}">
+                            <Run Text="금속 전체 "/>
+                            <Run Text="{Binding MetalCount}"/>
+                            <Run Text="건"/>
+                        </TextBlock>
+                    </StackPanel>
+                    <Border Grid.Column="1" Background="{StaticResource Accent_Blue}"
+                            CornerRadius="50" Width="42" Height="42"
+                            VerticalAlignment="Center">
+                        <TextBlock Text="⚙" FontSize="18"
+                                   Foreground="White"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <!-- 비금속 검사 -->
+            <Border Grid.Column="2" Background="{StaticResource Bg_Card}"
+                    BorderBrush="{StaticResource Accent_Cyan}" BorderThickness="1"
+                    CornerRadius="8" Margin="5,0,0,0" Padding="18,14">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel>
+                        <TextBlock Text="비금속 NG" FontSize="12"
+                                   Foreground="{StaticResource Text_Muted}"/>
+                        <TextBlock Text="{Binding NonMetalDamageCount}" FontSize="34" FontWeight="Black"
+                                   FontFamily="Consolas" Foreground="{StaticResource Accent_Cyan}"
+                                   Margin="0,6,0,0"/>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="건  " FontSize="11" Foreground="{StaticResource Text_Muted}"/>
+                            <TextBlock FontSize="11" Foreground="{StaticResource Text_Muted}">
+                                <Run Text="{Binding NonMetalDamageCount, StringFormat={}{0}}"/>
+                                <Run Text=" / "/>
+                                <Run Text="{Binding NgCount}"/>
+                                <Run Text=" NG"/>
+                            </TextBlock>
+                        </StackPanel>
+                        <TextBlock FontSize="11" Foreground="{StaticResource Text_Muted}">
+                            <Run Text="비금속 전체 "/>
+                            <Run Text="{Binding NonMetalCount}"/>
+                            <Run Text="건"/>
+                        </TextBlock>
+                    </StackPanel>
+                    <Border Grid.Column="1" Background="{StaticResource Accent_Cyan}"
+                            CornerRadius="50" Width="42" Height="42"
+                            VerticalAlignment="Center">
+                        <TextBlock Text="◈" FontSize="18"
+                                   Foreground="White"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!-- ══ 3. 도넛 2개 ══ -->
+        <Grid Grid.Row="3" Margin="0,0,0,12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- 검사 결과 비율 (OK/NG 도넛) -->
+            <Border Grid.Column="0" Background="{StaticResource Bg_Card}"
+                    BorderBrush="{StaticResource Border_Normal}" BorderThickness="1"
+                    CornerRadius="8" Margin="0,0,6,0" Padding="20,16">
+                <StackPanel>
+                    <TextBlock Text="검사 결과 비율 (OK / NG)"
+                               FontSize="13" FontWeight="Bold" Margin="0,0,0,14"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- 도넛 -->
+                        <Grid Width="170" Height="170">
+                            <Ellipse StrokeThickness="30" Stroke="#FFD0DDEF" Fill="Transparent"/>
+                            <Ellipse StrokeThickness="30" Stroke="{StaticResource Color_OK}"
+                                     Fill="Transparent" StrokeDashArray="{Binding OkDashArray}"
+                                     RenderTransformOrigin=".5,.5">
+                                <Ellipse.RenderTransform><RotateTransform Angle="-90"/></Ellipse.RenderTransform>
+                            </Ellipse>
+                            <Ellipse StrokeThickness="30" Stroke="{StaticResource Color_NG}"
+                                     Fill="Transparent" StrokeDashArray="{Binding NgDashArray}"
+                                     StrokeDashOffset="{Binding NgDashOffset}"
+                                     RenderTransformOrigin=".5,.5">
+                                <Ellipse.RenderTransform><RotateTransform Angle="-90"/></Ellipse.RenderTransform>
+                            </Ellipse>
+                            <Ellipse Width="110" Height="110" Fill="{StaticResource Bg_Card}"
+                                     HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <TextBlock Text="{Binding TotalCount}" FontSize="28" FontWeight="Black"
+                                           FontFamily="Consolas" Foreground="{StaticResource Accent_Blue}"
+                                           HorizontalAlignment="Center"/>
+                                <TextBlock Text="총 검사" FontSize="11"
+                                           Foreground="{StaticResource Text_Muted}"
+                                           HorizontalAlignment="Center" Margin="0,1,0,0"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <!-- 범례 -->
+                        <StackPanel Grid.Column="1" Margin="16,0,0,0" VerticalAlignment="Center">
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                <Ellipse Width="11" Height="11" Fill="{StaticResource Color_OK}"
+                                         VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                <TextBlock FontSize="13" Foreground="{StaticResource Text_Primary}">
+                                    <Run Text="OK" FontWeight="Bold"/>
+                                    <Run Text="  "/>
+                                    <Run Text="{Binding OkCount}"/>
+                                    <Run Text="건"/>
+                                </TextBlock>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,14">
+                                <Ellipse Width="11" Height="11" Fill="{StaticResource Color_NG}"
+                                         VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                <TextBlock FontSize="13" Foreground="{StaticResource Text_Primary}">
+                                    <Run Text="NG" FontWeight="Bold"/>
+                                    <Run Text="  "/>
+                                    <Run Text="{Binding NgCount}"/>
+                                    <Run Text="건"/>
+                                </TextBlock>
+                            </StackPanel>
+                            <Border Background="#FFFFF0F0" CornerRadius="6" Padding="12,8">
+                                <StackPanel>
+                                    <TextBlock Text="불량률" FontSize="11" Foreground="{StaticResource Color_NG}"/>
+                                    <TextBlock Text="{Binding NgRate, Converter={StaticResource Pct}}"
+                                               FontSize="22" FontWeight="Black" FontFamily="Consolas"
+                                               Foreground="{StaticResource Color_NG}" Margin="0,2,0,0"/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- 결함 종류 분포 -->
+            <Border Grid.Column="1" Background="{StaticResource Bg_Card}"
+                    BorderBrush="{StaticResource Border_Normal}" BorderThickness="1"
+                    CornerRadius="8" Margin="6,0,0,0" Padding="20,16">
+                <StackPanel>
+                    <TextBlock Text="결함 종류 분포"
+                               FontSize="13" FontWeight="Bold" Margin="0,0,0,14"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- NG 도넛 -->
+                        <Grid Width="170" Height="170">
+                            <Ellipse StrokeThickness="30" Stroke="#FFD0DDEF" Fill="Transparent"/>
+                            <Ellipse StrokeThickness="30" Stroke="{StaticResource Color_NG}"
+                                     Fill="Transparent" StrokeDashArray="{Binding NgDashArray}"
+                                     RenderTransformOrigin=".5,.5">
+                                <Ellipse.RenderTransform><RotateTransform Angle="-90"/></Ellipse.RenderTransform>
+                            </Ellipse>
+                            <Ellipse Width="110" Height="110" Fill="{StaticResource Bg_Card}"
+                                     HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <TextBlock Text="{Binding NgCount}" FontSize="28" FontWeight="Black"
+                                           FontFamily="Consolas" Foreground="{StaticResource Color_NG}"
+                                           HorizontalAlignment="Center"/>
+                                <TextBlock Text="NG 건수" FontSize="11"
+                                           Foreground="{StaticResource Text_Muted}"
+                                           HorizontalAlignment="Center" Margin="0,1,0,0"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <!-- 결함 목록 -->
+                        <ItemsControl Grid.Column="1" ItemsSource="{Binding DefectRatios}"
+                                      Margin="16,0,0,0" VerticalAlignment="Center">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Margin="0,0,0,10">
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+                                            <Ellipse Width="9" Height="9"
+                                                     Fill="{StaticResource Color_NG}"
+                                                     VerticalAlignment="Center" Margin="0,0,7,0"/>
+                                            <TextBlock Text="{Binding DefectType}"
+                                                       FontSize="13" FontWeight="Bold"/>
+                                        </StackPanel>
+                                        <TextBlock FontSize="12"
+                                                   Foreground="{StaticResource Text_Muted}"
+                                                   Margin="16,0,0,0">
+                                            <Run Text="{Binding Count}"/>
+                                            <Run Text="건  "/>
+                                            <Run Text="{Binding Ratio, StringFormat={}{0:F1}}"/>
+                                            <Run Text="%"/>
+                                        </TextBlock>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- ══ 3. 시간대별 막대그래프 ══ -->
+        <Border Grid.Row="4" Background="{StaticResource Bg_Card}"
+                BorderBrush="{StaticResource Border_Normal}" BorderThickness="1"
+                CornerRadius="8" Margin="0,0,0,12" Padding="16,14">
+            <StackPanel>
+                <!-- 헤더 -->
+                <Grid Margin="0,0,0,10">
+                    <TextBlock Text="시간대별 검사 현황 (오늘)"
+                               FontSize="13" FontWeight="Bold"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Border Width="12" Height="12" CornerRadius="2"
+                                Background="{StaticResource Color_OK}"
+                                VerticalAlignment="Center" Margin="0,0,5,0"/>
+                        <TextBlock Text="OK" FontSize="11" Margin="0,0,12,0"
+                                   Foreground="{StaticResource Text_Muted}" VerticalAlignment="Center"/>
+                        <Border Width="12" Height="12" CornerRadius="2"
+                                Background="{StaticResource Color_NG}"
+                                VerticalAlignment="Center" Margin="0,0,5,0"/>
+                        <TextBlock Text="NG" FontSize="11"
+                                   Foreground="{StaticResource Text_Muted}" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Grid>
+
+                <!-- 막대 차트 (24시간) -->
+                <ItemsControl ItemsSource="{Binding HourlyData}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Rows="1"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Margin="1,0">
+                                <!-- 총 건수 (0이면 빈칸처럼 보이게) -->
+                                <TextBlock HorizontalAlignment="Center" FontSize="8"
+                                           Foreground="{StaticResource Text_Muted}" Margin="0,0,0,1">
+                                    <TextBlock.Text>
+                                        <Binding Path="Total" StringFormat="{}{0}"/>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                                <!-- 막대 영역 -->
+                                <Grid Height="110">
+                                    <StackPanel VerticalAlignment="Bottom">
+                                        <!-- NG 막대 (위) -->
+                                        <Border Background="{StaticResource Color_NG}"
+                                                CornerRadius="2,2,0,0" MinWidth="3">
+                                            <Border.Height>
+                                                <MultiBinding Converter="{StaticResource BarHeight}">
+                                                    <Binding Path="NgCount"/>
+                                                    <Binding RelativeSource="{RelativeSource AncestorType=ItemsControl}"
+                                                             Path="DataContext.HourlyData"/>
+                                                </MultiBinding>
+                                            </Border.Height>
+                                        </Border>
+                                        <!-- OK 막대 (아래) -->
+                                        <Border Background="{StaticResource Color_OK}"
+                                                CornerRadius="0,0,2,2" MinWidth="3">
+                                            <Border.Height>
+                                                <MultiBinding Converter="{StaticResource BarHeight}">
+                                                    <Binding Path="OkCount"/>
+                                                    <Binding RelativeSource="{RelativeSource AncestorType=ItemsControl}"
+                                                             Path="DataContext.HourlyData"/>
+                                                </MultiBinding>
+                                            </Border.Height>
+                                        </Border>
+                                    </StackPanel>
+                                </Grid>
+                                <!-- 시간 레이블 -->
+                                <TextBlock Text="{Binding Hour, StringFormat={}{0:D2}시}"
+                                           HorizontalAlignment="Center" FontSize="8"
+                                           Foreground="{StaticResource Text_Muted}" Margin="0,2,0,0"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </Border>
+
+        <!-- ══ 4. 3개 요약 카드 ══ -->
+        <Grid Grid.Row="5" Margin="0,0,0,12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/><ColumnDefinition/><ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <!-- 최고 불량 시간대 -->
+            <Border Grid.Column="0" Background="#FFFFFBF0"
+                    BorderBrush="#FFDD8800" BorderThickness="1"
+                    CornerRadius="8" Margin="0,0,5,0" Padding="16,12">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                        <TextBlock Text="⚠" FontSize="13" Foreground="#FFDD8800" Margin="0,0,7,0"
+                                   VerticalAlignment="Center"/>
+                        <TextBlock Text="최고 불량 시간대" FontSize="12"
+                                   Foreground="#FFDD8800" FontWeight="Bold"/>
+                    </StackPanel>
+                    <TextBlock Text="{Binding PeakNgHour}" FontSize="20" FontWeight="Black"
+                               Foreground="{StaticResource Text_Primary}"/>
+                </StackPanel>
+            </Border>
+
+            <!-- 최고 양품 시간대 -->
+            <Border Grid.Column="1" Background="#FFF0FFF4"
+                    BorderBrush="{StaticResource Color_OK}" BorderThickness="1"
+                    CornerRadius="8" Margin="3,0,3,0" Padding="16,12">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                        <TextBlock Text="✓" FontSize="13" Foreground="{StaticResource Color_OK}" Margin="0,0,7,0"
+                                   VerticalAlignment="Center"/>
+                        <TextBlock Text="최고 양품 시간대" FontSize="12"
+                                   Foreground="{StaticResource Color_OK}" FontWeight="Bold"/>
+                    </StackPanel>
+                    <TextBlock Text="{Binding PeakOkHour}" FontSize="20" FontWeight="Black"
+                               Foreground="{StaticResource Text_Primary}"/>
+                </StackPanel>
+            </Border>
+
+            <!-- 평균 탐지 신뢰도 -->
+            <Border Grid.Column="2" Background="#FFF0F5FF"
+                    BorderBrush="{StaticResource Accent_Blue}" BorderThickness="1"
+                    CornerRadius="8" Margin="5,0,0,0" Padding="16,12">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                        <TextBlock Text="◎" FontSize="13" Foreground="{StaticResource Accent_Blue}" Margin="0,0,7,0"
+                                   VerticalAlignment="Center"/>
+                        <TextBlock Text="평균 탐지 신뢰도" FontSize="12"
+                                   Foreground="{StaticResource Accent_Blue}" FontWeight="Bold"/>
+                    </StackPanel>
+                    <TextBlock Text="{Binding AvgConf, Converter={StaticResource Pct}}"
+                               FontSize="20" FontWeight="Black"
+                               Foreground="{StaticResource Text_Primary}"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- ══ 5. 시간대별 상세 현황 테이블 ══ -->
+        <Border Grid.Row="6" Background="{StaticResource Bg_Card}"
+                BorderBrush="{StaticResource Border_Normal}" BorderThickness="1"
+                CornerRadius="8" Padding="0">
+            <StackPanel>
+                <Border Background="{StaticResource Accent_Blue}"
+                        CornerRadius="8,8,0,0" Padding="16,10">
+                    <TextBlock Text="시간대별 상세 현황" FontSize="13" FontWeight="Bold"
+                               Foreground="White"/>
+                </Border>
+                <DataGrid ItemsSource="{Binding HourlyData}"
+                          AutoGenerateColumns="False" IsReadOnly="True"
+                          MaxHeight="260">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="시간"
+                                            Binding="{Binding Hour, StringFormat={}{0}시}" Width="80"/>
+                        <DataGridTextColumn Header="OK"    Binding="{Binding OkCount}"  Width="80"/>
+                        <DataGridTextColumn Header="NG"    Binding="{Binding NgCount}"  Width="80"/>
+                        <DataGridTextColumn Header="합계"  Binding="{Binding Total}"    Width="80"/>
+                        <DataGridTextColumn Header="불량률(%)"
+                                            Binding="{Binding NgCount, StringFormat={}{0}}" Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </StackPanel>
+        </Border>
+
+    </Grid>
+    </ScrollViewer>
+</UserControl>

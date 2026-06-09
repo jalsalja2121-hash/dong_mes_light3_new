@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>MpsMes.Services</RootNamespace>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MpsMes.Core\MpsMes.Core.csproj" />
+    <ProjectReference Include="..\MpsMes.Infrastructure\MpsMes.Infrastructure.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Dapper"          Version="2.1.35" />
+    <PackageReference Include="MySqlConnector"  Version="2.3.7"  />
+  </ItemGroup>
+</Project>

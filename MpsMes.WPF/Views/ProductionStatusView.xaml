@@ -1,0 +1,419 @@
+<UserControl x:Class="MpsMes.WPF.Views.ProductionStatusView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:conv="clr-namespace:MpsMes.WPF.Converters"
+             Background="{StaticResource Bg_Main}"
+             TextElement.Foreground="{StaticResource Text_Primary}">
+
+    <UserControl.Resources>
+        <conv:PercentageConverter      x:Key="Pct"/>
+        <conv:PercentToWidthConverter  x:Key="PercentToWidth"/>
+        <conv:BarHeightConverter       x:Key="BarHeight"/>
+        <conv:AngleToArcConverter      x:Key="PieSlice"/>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <Grid Margin="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="220"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- 타이틀 + 새로고침 -->
+        <Grid Grid.Row="0" Margin="0,0,0,12">
+            <StackPanel Orientation="Horizontal">
+                <Rectangle Width="4" Height="18" Fill="{StaticResource Accent_Blue}" Margin="0,0,8,0"/>
+                <TextBlock Text="생산현황" FontSize="15" FontWeight="Bold"
+                           Foreground="{StaticResource Text_Primary}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <TextBlock Text="갱신: " FontSize="11" Foreground="{StaticResource Text_Muted}" VerticalAlignment="Center"/>
+                <TextBlock Text="{Binding LastRefresh}" FontSize="11"
+                           Foreground="{StaticResource Accent_Blue}" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                <Button Content="새로고침" Style="{StaticResource Btn_Blue}"
+                        Command="{Binding RefreshCommand}" Height="26" Padding="12,0"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- ═══ 상단: KPI 4개 ═══ -->
+        <Grid Grid.Row="1" Margin="0,0,0,12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/><ColumnDefinition/><ColumnDefinition/><ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <!-- 목표수량 -->
+            <Border Grid.Column="0" Background="{StaticResource Bg_Card}"
+                    BorderBrush="{StaticResource Accent_Blue}" BorderThickness="1"
+                    CornerRadius="8" Margin="0,0,6,0" Padding="16,14">
+                <StackPanel>
+                    <TextBlock Text="목표 수량" FontSize="11" Foreground="{StaticResource Text_Muted}"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,8,0,10">
+                        <TextBlock Text="{Binding TargetQty}" FontSize="34" FontWeight="Bold"
+                                   Foreground="{StaticResource Text_Primary}"/>
+                        <TextBlock Text=" 개" FontSize="13" Foreground="{StaticResource Text_Muted}"
+                                   VerticalAlignment="Bottom" Margin="0,0,0,5"/>
+                    </StackPanel>
+                    <!-- 입력 + 확인 버튼 -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0"
+                                 Text="{Binding TargetInput, UpdateSourceTrigger=PropertyChanged}"
+                                 Height="38" FontSize="15" FontWeight="Bold"
+                                 Padding="8,0" TextAlignment="Center"
+                                 VerticalContentAlignment="Center"
+                                 Background="White"
+                                 Foreground="#FF1A1A1A"
+                                 BorderBrush="{StaticResource Accent_Blue}"
+                                 BorderThickness="1"
+                                 CaretBrush="#FF1A1A1A">
+                            <TextBox.InputBindings>
+                                <KeyBinding Key="Return"
+                                            Command="{Binding SetTargetCommand}"/>
+                            </TextBox.InputBindings>
+                        </TextBox>
+                        <Button Grid.Column="1"
+                                Content="적용"
+                                Command="{Binding SetTargetCommand}"
+                                Style="{StaticResource Btn_Blue}"
+                                Height="38" Width="52"
+                                FontSize="12" Margin="6,0,0,0"/>
+                    </Grid>
+                    <TextBlock Text="Enter 또는 적용 버튼으로 설정" FontSize="10"
+                               Foreground="{StaticResource Text_Muted}" Margin="0,4,0,0"/>
+                </StackPanel>
+            </Border>
+
+            <!-- 생산수량 -->
+            <Border Grid.Column="1" Background="{StaticResource Bg_Card}"
+                    BorderBrush="{StaticResource Accent_Blue}" BorderThickness="1"
+                    CornerRadius="8" Margin="3,0,3,0" Padding="16,14">
+                <StackPanel>
+                    <TextBlock Text="금일 생산수량" FontSize="11" Foreground="{StaticResource Text_Muted}"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,8,0,8">
+                        <TextBlock Text="{Binding TotalProduced}" FontSize="34" FontWeight="Bold"
+                                   Foreground="{StaticResource Accent_Blue}"/>
+                        <TextBlock Text=" 개" FontSize="13" Foreground="{StaticResource Text_Muted}"
+                                   VerticalAlignment="Bottom" Margin="0,0,0,5"/>
+                    </StackPanel>
+                    <TextBlock FontSize="11" Foreground="{StaticResource Text_Muted}">
+                        <Run Text="금속 "/>
+                        <Run Text="{Binding MetalTotal}" Foreground="{StaticResource Accent_Blue}" FontWeight="Bold"/>
+                        <Run Text="  비금속 "/>
+                        <Run Text="{Binding NonMetalTotal}" Foreground="{StaticResource Accent_Cyan}" FontWeight="Bold"/>
+                    </TextBlock>
+                </StackPanel>
+            </Border>
+
+            <!-- 달성률 -->
+            <Border Grid.Column="2" Background="{StaticResource Bg_Card}"
+                    BorderBrush="{StaticResource Color_OK}" BorderThickness="1"
+                    CornerRadius="8" Margin="3,0,3,0" Padding="16,14">
+                <StackPanel>
+                    <TextBlock Text="달성률" FontSize="11" Foreground="{StaticResource Text_Muted}"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,8,0,8">
+                        <TextBlock Text="{Binding AchieveRate, StringFormat=\{0:F1\}}" FontSize="34" FontWeight="Bold"
+                                   Foreground="{StaticResource Color_OK}"/>
+                        <TextBlock Text=" %" FontSize="13" Foreground="{StaticResource Text_Muted}"
+                                   VerticalAlignment="Bottom" Margin="0,0,0,5"/>
+                    </StackPanel>
+                    <Grid Height="8">
+                        <Border Background="{StaticResource Bg_Input}" CornerRadius="4"/>
+                        <Border CornerRadius="4" HorizontalAlignment="Left" Background="{StaticResource Color_OK}">
+                            <Border.Width>
+                                <MultiBinding Converter="{StaticResource PercentToWidth}">
+                                    <Binding Path="AchieveRate"/>
+                                    <Binding RelativeSource="{RelativeSource AncestorType=Grid}" Path="ActualWidth"/>
+                                </MultiBinding>
+                            </Border.Width>
+                        </Border>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- 불량률 -->
+            <Border Grid.Column="3" Background="{StaticResource Bg_Card}"
+                    BorderBrush="{StaticResource Color_NG}" BorderThickness="1"
+                    CornerRadius="8" Margin="6,0,0,0" Padding="16,14">
+                <StackPanel>
+                    <TextBlock Text="불량률" FontSize="11" Foreground="{StaticResource Text_Muted}"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,8,0,8">
+                        <TextBlock Text="{Binding DefectRate, StringFormat=\{0:F1\}}" FontSize="34" FontWeight="Bold"
+                                   Foreground="{StaticResource Color_NG}"/>
+                        <TextBlock Text=" %" FontSize="13" Foreground="{StaticResource Text_Muted}"
+                                   VerticalAlignment="Bottom" Margin="0,0,0,5"/>
+                    </StackPanel>
+                    <Grid Height="8">
+                        <Border Background="{StaticResource Bg_Input}" CornerRadius="4"/>
+                        <Border CornerRadius="4" HorizontalAlignment="Left" Background="{StaticResource Color_NG}">
+                            <Border.Width>
+                                <MultiBinding Converter="{StaticResource PercentToWidth}">
+                                    <Binding Path="DefectRate"/>
+                                    <Binding RelativeSource="{RelativeSource AncestorType=Grid}" Path="ActualWidth"/>
+                                </MultiBinding>
+                            </Border.Width>
+                        </Border>
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- ═══ 중단: 막대그래프 + 소재비율 ═══ -->
+        <Grid Grid.Row="2" Margin="0,0,0,12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- 시간대별 생산량 막대그래프 -->
+            <Border Grid.Column="0" Background="{StaticResource Bg_Card}"
+                    BorderBrush="{StaticResource Border_Normal}" BorderThickness="1"
+                    CornerRadius="6" Margin="0,0,6,0" Padding="12,10">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Text="시간대별 생산량 (오늘)"
+                               FontSize="12" FontWeight="SemiBold"
+                               Foreground="{StaticResource Accent_Blue}" Margin="0,0,0,8"/>
+                    <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto"
+                                  VerticalScrollBarVisibility="Disabled">
+                        <ItemsControl ItemsSource="{Binding HourlyItems}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Width="34" Margin="2,0" VerticalAlignment="Bottom">
+                                        <TextBlock Text="{Binding Total}" FontSize="8"
+                                                   HorizontalAlignment="Center"
+                                                   Foreground="{StaticResource Text_Muted}" Margin="0,0,0,1"/>
+                                        <Border CornerRadius="2,2,0,0" HorizontalAlignment="Stretch"
+                                                MinHeight="2">
+                                            <Border.Height>
+                                                <MultiBinding Converter="{StaticResource BarHeight}">
+                                                    <Binding Path="Total"/>
+                                                    <Binding Path="DataContext.HourlyItems"
+                                                             RelativeSource="{RelativeSource AncestorType=ItemsControl}"/>
+                                                </MultiBinding>
+                                            </Border.Height>
+                                            <Border.Background>
+                                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                                    <GradientStop Color="#FF5B9BD5" Offset="0"/>
+                                                    <GradientStop Color="#FF1A54AF" Offset="1"/>
+                                                </LinearGradientBrush>
+                                            </Border.Background>
+                                        </Border>
+                                        <TextBlock Text="{Binding Label}" FontSize="7"
+                                                   HorizontalAlignment="Center"
+                                                   Foreground="{StaticResource Text_Muted}" Margin="0,2,0,0"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Grid>
+            </Border>
+
+            <!-- 소재별 파이차트 -->
+            <Border Grid.Column="1" Background="{StaticResource Bg_Card}"
+                    BorderBrush="{StaticResource Border_Normal}" BorderThickness="1"
+                    CornerRadius="6" Margin="6,0,0,0" Padding="16,12">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Text="소재별 비율"
+                               FontSize="12" FontWeight="SemiBold"
+                               Foreground="{StaticResource Accent_Blue}" Margin="0,0,0,8"/>
+
+                    <!-- 파이차트 Canvas -->
+                    <Viewbox Grid.Row="1" Stretch="Uniform" MaxHeight="180">
+                        <Canvas Width="160" Height="160">
+
+                            <!-- 금속 슬라이스 -->
+                            <Path Fill="#FF1A54AF" Stroke="{StaticResource Bg_Card}" StrokeThickness="1.5">
+                                <Path.Data>
+                                    <MultiBinding Converter="{StaticResource PieSlice}">
+                                        <Binding Path="MetalStartAngle"/>
+                                        <Binding Path="MetalSweepAngle"/>
+                                        <Binding Source="75"/>
+                                    </MultiBinding>
+                                </Path.Data>
+                                <!-- 중심점 오프셋 -->
+                                <Path.RenderTransform>
+                                    <TranslateTransform X="5" Y="5"/>
+                                </Path.RenderTransform>
+                            </Path>
+
+                            <!-- 비금속 슬라이스 -->
+                            <Path Fill="#FF5B9BD5" Stroke="{StaticResource Bg_Card}" StrokeThickness="1.5">
+                                <Path.Data>
+                                    <MultiBinding Converter="{StaticResource PieSlice}">
+                                        <Binding Path="NonMetalStartAngle"/>
+                                        <Binding Path="NonMetalSweepAngle"/>
+                                        <Binding Source="75"/>
+                                    </MultiBinding>
+                                </Path.Data>
+                                <Path.RenderTransform>
+                                    <TranslateTransform X="5" Y="5"/>
+                                </Path.RenderTransform>
+                            </Path>
+
+                            <!-- 도넛 중앙 원 -->
+                            <Ellipse Width="70" Height="70"
+                                     Canvas.Left="45" Canvas.Top="45"
+                                     Fill="{StaticResource Bg_Card}"/>
+
+                            <!-- 중앙 텍스트 -->
+                            <TextBlock Canvas.Left="5" Canvas.Top="62"
+                                       Width="150" TextAlignment="Center"
+                                       Text="{Binding TotalProduced}"
+                                       FontSize="22" FontWeight="Bold"
+                                       Foreground="{StaticResource Text_Primary}"/>
+                            <TextBlock Canvas.Left="5" Canvas.Top="87"
+                                       Width="150" TextAlignment="Center"
+                                       Text="총 생산" FontSize="10"
+                                       Foreground="{StaticResource Text_Muted}"/>
+                        </Canvas>
+                    </Viewbox>
+
+                    <!-- 범례 -->
+                    <StackPanel Grid.Row="2" Margin="0,10,0,0">
+                        <Grid Margin="0,3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Orientation="Horizontal">
+                                <Rectangle Width="12" Height="12" Fill="#FF1A54AF"
+                                           RadiusX="2" RadiusY="2" Margin="0,0,6,0"/>
+                                <TextBlock Text="금속" FontSize="11"
+                                           Foreground="{StaticResource Text_Secondary}"/>
+                            </StackPanel>
+                            <TextBlock Grid.Column="2" FontSize="11" FontWeight="Bold"
+                                       Foreground="#FF1A54AF">
+                                <Run Text="{Binding MetalTotal}"/>
+                                <Run Text="개 "/>
+                                <Run Text="{Binding MetalRatioPercent, StringFormat=\{0:F1\}}"/>
+                                <Run Text="%"/>
+                            </TextBlock>
+                        </Grid>
+                        <Grid Margin="0,3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Orientation="Horizontal">
+                                <Rectangle Width="12" Height="12" Fill="#FF5B9BD5"
+                                           RadiusX="2" RadiusY="2" Margin="0,0,6,0"/>
+                                <TextBlock Text="비금속" FontSize="11"
+                                           Foreground="{StaticResource Text_Secondary}"/>
+                            </StackPanel>
+                            <TextBlock Grid.Column="2" FontSize="11" FontWeight="Bold"
+                                       Foreground="#FF5B9BD5">
+                                <Run Text="{Binding NonMetalTotal}"/>
+                                <Run Text="개 "/>
+                                <Run Text="{Binding NonMetalRatioPercent, StringFormat=\{0:F1\}}"/>
+                                <Run Text="%"/>
+                            </TextBlock>
+                        </Grid>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!-- ═══ 하단: 사이클타임 분석 ═══ -->
+        <Border Grid.Row="3" Background="{StaticResource Bg_Card}"
+                BorderBrush="{StaticResource Border_Normal}" BorderThickness="1"
+                CornerRadius="6" Padding="14,12">
+            <StackPanel>
+                <TextBlock Text="사이클타임 분석" FontSize="12" FontWeight="SemiBold"
+                           Foreground="{StaticResource Accent_Blue}" Margin="0,0,0,10"/>
+
+                <!-- 평균/최소/최대 카드 -->
+                <Grid Margin="0,0,0,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/><ColumnDefinition/><ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0" Background="{StaticResource Bg_Card}"
+                            BorderBrush="{StaticResource Accent_Blue}" BorderThickness="1"
+                            CornerRadius="6" Margin="0,0,6,0" Padding="14,10">
+                        <StackPanel HorizontalAlignment="Center">
+                            <TextBlock Text="평균" FontSize="11"
+                                       Foreground="{StaticResource Text_Muted}" HorizontalAlignment="Center"/>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,6,0,0">
+                                <TextBlock Text="{Binding AvgCycleTime, StringFormat=\{0:F1\}}"
+                                           FontSize="26" FontWeight="Bold"
+                                           Foreground="{StaticResource Accent_Blue}"/>
+                                <TextBlock Text=" 초" FontSize="12"
+                                           Foreground="{StaticResource Text_Muted}"
+                                           VerticalAlignment="Bottom" Margin="0,0,0,3"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Column="1" Background="{StaticResource Bg_Card}"
+                            BorderBrush="{StaticResource Color_OK}" BorderThickness="1"
+                            CornerRadius="6" Margin="3,0,3,0" Padding="14,10">
+                        <StackPanel HorizontalAlignment="Center">
+                            <TextBlock Text="최소" FontSize="11"
+                                       Foreground="{StaticResource Text_Muted}" HorizontalAlignment="Center"/>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,6,0,0">
+                                <TextBlock Text="{Binding MinCycleTime, StringFormat=\{0:F1\}}"
+                                           FontSize="26" FontWeight="Bold"
+                                           Foreground="{StaticResource Color_OK}"/>
+                                <TextBlock Text=" 초" FontSize="12"
+                                           Foreground="{StaticResource Text_Muted}"
+                                           VerticalAlignment="Bottom" Margin="0,0,0,3"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Column="2" Background="{StaticResource Bg_Card}"
+                            BorderBrush="{StaticResource Accent_Blue}" BorderThickness="1"
+                            CornerRadius="6" Margin="6,0,0,0" Padding="14,10">
+                        <StackPanel HorizontalAlignment="Center">
+                            <TextBlock Text="최대" FontSize="11"
+                                       Foreground="{StaticResource Text_Muted}" HorizontalAlignment="Center"/>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,6,0,0">
+                                <TextBlock Text="{Binding MaxCycleTime, StringFormat=\{0:F1\}}"
+                                           FontSize="26" FontWeight="Bold"
+                                           Foreground="{StaticResource Accent_Blue}"/>
+                                <TextBlock Text=" 초" FontSize="12"
+                                           Foreground="{StaticResource Text_Muted}"
+                                           VerticalAlignment="Bottom" Margin="0,0,0,3"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+                <!-- 최근 사이클타임 리스트 -->
+                <DataGrid ItemsSource="{Binding CycleItems}"
+                          AutoGenerateColumns="False" IsReadOnly="True" MaxHeight="120">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="완료 시각"
+                                            Binding="{Binding TimeLabel}" Width="90"/>
+                        <DataGridTextColumn Header="사이클타임 (초)"
+                                            Binding="{Binding CycleTimeSec, StringFormat=\{0:F2\}}" Width="110"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </StackPanel>
+        </Border>
+
+    </Grid>
+    </ScrollViewer>
+</UserControl>

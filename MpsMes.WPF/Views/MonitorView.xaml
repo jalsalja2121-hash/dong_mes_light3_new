@@ -1,0 +1,447 @@
+<UserControl x:Class="MpsMes.WPF.Views.MonitorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:conv="clr-namespace:MpsMes.WPF.Converters"
+             Background="{StaticResource Bg_Main}"
+             TextElement.Foreground="{StaticResource Text_Primary}">
+    <UserControl.Resources>
+        <conv:BoolToLedBrushConverter  x:Key="BoolToLed"/>
+        <conv:StepBgConverter          x:Key="StepBgConverter"/>
+        <conv:StepFgConverter          x:Key="StepFgConverter"/>
+        <conv:StepFwConverter          x:Key="StepFwConverter"/>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <Grid Margin="16,14">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/> <!-- 0: 타이틀 -->
+            <RowDefinition Height="Auto"/> <!-- 1: KPI 카드 -->
+            <RowDefinition Height="Auto"/> <!-- 2: 입출력 신호 -->
+            <RowDefinition Height="Auto"/> <!-- 3: 현재 시퀀스 -->
+        </Grid.RowDefinitions>
+
+        <!-- ══ 0. 타이틀 ══ -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,16">
+            <Border Width="4" Height="20" CornerRadius="2"
+                    Background="{StaticResource Accent_Blue}" Margin="0,0,10,0"/>
+            <TextBlock Text="PLC 실시간 모니터링"
+                       FontSize="17" FontWeight="Bold"/>
+        </StackPanel>
+
+        <!-- ══ 1. KPI 카드 4개 ══ -->
+        <Grid Grid.Row="1" Margin="0,0,0,14">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/><ColumnDefinition/><ColumnDefinition/><ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" Background="{StaticResource Bg_Card}"
+                    BorderBrush="{StaticResource Accent_Blue}" BorderThickness="0,4,0,0"
+                    CornerRadius="8" Margin="0,0,5,0" Padding="18,16">
+                <StackPanel>
+                    <TextBlock Text="금속 수량" FontSize="12"
+                               Foreground="{StaticResource Text_Muted}"/>
+                    <TextBlock Text="{Binding MetalQty}" FontSize="38" FontWeight="Black"
+                               FontFamily="Consolas" Foreground="{StaticResource Accent_Blue}"
+                               Margin="0,8,0,2"/>
+                    <TextBlock Text="개" FontSize="12" Foreground="{StaticResource Text_Muted}"/>
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Column="1" Background="{StaticResource Bg_Card}"
+                    BorderBrush="{StaticResource Accent_Cyan}" BorderThickness="0,4,0,0"
+                    CornerRadius="8" Margin="3,0,3,0" Padding="18,16">
+                <StackPanel>
+                    <TextBlock Text="비금속 수량" FontSize="12"
+                               Foreground="{StaticResource Text_Muted}"/>
+                    <TextBlock Text="{Binding NonMetalQty}" FontSize="38" FontWeight="Black"
+                               FontFamily="Consolas" Foreground="{StaticResource Accent_Cyan}"
+                               Margin="0,8,0,2"/>
+                    <TextBlock Text="개" FontSize="12" Foreground="{StaticResource Text_Muted}"/>
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Column="2" Background="{StaticResource Bg_Card}"
+                    BorderBrush="{StaticResource Accent_Cyan}" BorderThickness="0,4,0,0"
+                    CornerRadius="8" Margin="3,0,3,0" Padding="18,16">
+                <StackPanel>
+                    <TextBlock Text="합  계" FontSize="12"
+                               Foreground="{StaticResource Text_Muted}"/>
+                    <TextBlock Text="{Binding TotalQty}" FontSize="38" FontWeight="Black"
+                               FontFamily="Consolas" Foreground="{StaticResource Accent_Cyan}"
+                               Margin="0,8,0,2"/>
+                    <TextBlock Text="개" FontSize="12" Foreground="{StaticResource Text_Muted}"/>
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Column="3" Background="{StaticResource Bg_Card}"
+                    BorderBrush="{StaticResource Border_Normal}" BorderThickness="0,4,0,0"
+                    CornerRadius="8" Margin="5,0,0,0" Padding="18,16">
+                <StackPanel>
+                    <TextBlock Text="서보 위치" FontSize="12"
+                               Foreground="{StaticResource Text_Muted}"/>
+                    <TextBlock Text="{Binding ServoPos}" FontSize="38" FontWeight="Black"
+                               FontFamily="Consolas" Foreground="{StaticResource Text_Primary}"
+                               Margin="0,8,0,2"/>
+                    <TextBlock Text="mm" FontSize="12" Foreground="{StaticResource Text_Muted}"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- ══ 2. 입출력 신호 패널 ══ -->
+        <Grid Grid.Row="2" Margin="0,0,0,14">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- 입력 신호 (X) -->
+            <Border Grid.Column="0" Background="{StaticResource Bg_Card}"
+                    BorderBrush="{StaticResource Border_Normal}" BorderThickness="1"
+                    CornerRadius="8" Margin="0,0,7,0" Padding="0">
+                <StackPanel>
+                    <Border Background="{StaticResource Accent_Blue}"
+                            CornerRadius="8,8,0,0" Padding="14,10">
+                        <TextBlock Text="■ 입력 신호 (X)" FontSize="13"
+                                   FontWeight="Bold" Foreground="White"/>
+                    </Border>
+                    <Grid Margin="14,10,14,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/><ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <!-- 좌측 10개 -->
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                <Ellipse Width="11" Height="11" Margin="0,0,8,0"
+                                         Fill="{Binding X00SupplyFwd, Converter={StaticResource BoolToLed}}"/>
+                                <TextBlock FontSize="12" Foreground="{StaticResource Text_Secondary}">
+                                    <Run Text="공급 전진"/>
+                                </TextBlock>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                <Ellipse Width="11" Height="11" Margin="0,0,8,0"
+                                         Fill="{Binding X01SupplyBwd, Converter={StaticResource BoolToLed}}"/>
+                                <TextBlock FontSize="12" Foreground="{StaticResource Text_Secondary}">
+                                    <Run Text="공급 후진"/>
+                                </TextBlock>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                <Ellipse Width="11" Height="11" Margin="0,0,8,0"
+                                         Fill="{Binding X02DistribFwd, Converter={StaticResource BoolToLed}}"/>
+                                <TextBlock FontSize="12" Foreground="{StaticResource Text_Secondary}">
+                                    <Run Text="분배 전진"/>
+                                </TextBlock>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                <Ellipse Width="11" Height="11" Margin="0,0,8,0"
+                                         Fill="{Binding X03DistribBwd, Converter={StaticResource BoolToLed}}"/>
+                                <TextBlock FontSize="12" Foreground="{StaticResource Text_Secondary}">
+                                    <Run Text="분배 후진"/>
+                                </TextBlock>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                <Ellipse Width="11" Height="11" Margin="0,0,8,0"
+                                         Fill="{Binding X04MachFwd, Converter={StaticResource BoolToLed}}"/>
+                                <TextBlock FontSize="12" Foreground="{StaticResource Text_Secondary}">
+                                    <Run Text="가공 전진"/>
+                                </TextBlock>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                <Ellipse Width="11" Height="11" Margin="0,0,8,0"
+                                         Fill="{Binding X05MachBwd, Converter={StaticResource BoolToLed}}"/>
+                                <TextBlock FontSize="12" Foreground="{StaticResource Text_Secondary}">
+                                    <Run Text="가공 후진"/>
+                                </TextBlock>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                <Ellipse Width="11" Height="11" Margin="0,0,8,0"
+                                         Fill="{Binding X06EjectFwd, Converter={StaticResource BoolToLed}}"/>
+                                <TextBlock FontSize="12" Foreground="{StaticResource Text_Secondary}">
+                                    <Run Text="배출 전진"/>
+                                </TextBlock>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                <Ellipse Width="11" Height="11" Margin="0,0,8,0"
+                                         Fill="{Binding X07EjectBwd, Converter={StaticResource BoolToLed}}"/>
+                                <TextBlock FontSize="12" Foreground="{StaticResource Text_Secondary}">
+                                    <Run Text="배출 후진"/>
+                                </TextBlock>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                <Ellipse Width="11" Height="11" Margin="0,0,8,0"
+                                         Fill="{Binding X08StopFwd, Converter={StaticResource BoolToLed}}"/>
+                                <TextBlock FontSize="12" Foreground="{StaticResource Text_Secondary}">
+                                    <Run Text="스토퍼 전진"/>
+                                </TextBlock>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                <Ellipse Width="11" Height="11" Margin="0,0,8,0"
+                                         Fill="{Binding X09StopBwd, Converter={StaticResource BoolToLed}}"/>
+                                <TextBlock FontSize="12" Foreground="{StaticResource Text_Secondary}">
+                                    <Run Text="스토퍼 후진"/>
+                                </TextBlock>
+                            </StackPanel>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1">
+                            <!-- 우측 10개 -->
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                <Ellipse Width="11" Height="11" Margin="0,0,8,0"
+                                         Fill="{Binding X0ASuctionFwd, Converter={StaticResource BoolToLed}}"/>
+                                <TextBlock FontSize="12" Foreground="{StaticResource Text_Secondary}">
+                                    <Run Text="흡착 전진"/>
+                                </TextBlock>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                <Ellipse Width="11" Height="11" Margin="0,0,8,0"
+                                         Fill="{Binding X0BSuctionBwd, Converter={StaticResource BoolToLed}}"/>
+                                <TextBlock FontSize="12" Foreground="{StaticResource Text_Secondary}">
+                                    <Run Text="흡착 후진"/>
+                                </TextBlock>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                <Ellipse Width="11" Height="11" Margin="0,0,8,0"
+                                         Fill="{Binding X0CStoreFwd, Converter={StaticResource BoolToLed}}"/>
+                                <TextBlock FontSize="12" Foreground="{StaticResource Text_Secondary}">
+                                    <Run Text="저장 전진"/>
+                                </TextBlock>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                <Ellipse Width="11" Height="11" Margin="0,0,8,0"
+                                         Fill="{Binding X0DStoreBwd, Converter={StaticResource BoolToLed}}"/>
+                                <TextBlock FontSize="12" Foreground="{StaticResource Text_Secondary}">
+                                    <Run Text="저장 후진"/>
+                                </TextBlock>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                <Ellipse Width="11" Height="11" Margin="0,0,8,0"
+                                         Fill="{Binding X0EVacuum, Converter={StaticResource BoolToLed}}"/>
+                                <TextBlock FontSize="12" Foreground="{StaticResource Text_Secondary}">
+                                    <Run Text="진공 SW"/>
+                                </TextBlock>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                <Ellipse Width="11" Height="11" Margin="0,0,8,0"
+                                         Fill="{Binding X0FSupplyMag, Converter={StaticResource BoolToLed}}"/>
+                                <TextBlock FontSize="12" Foreground="{StaticResource Text_Secondary}">
+                                    <Run Text="공급 매거진"/>
+                                </TextBlock>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                <Ellipse Width="11" Height="11" Margin="0,0,8,0"
+                                         Fill="{Binding X10DistribMag, Converter={StaticResource BoolToLed}}"/>
+                                <TextBlock FontSize="12" Foreground="{StaticResource Text_Secondary}">
+                                    <Run Text="분배 매거진"/>
+                                </TextBlock>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                <Ellipse Width="11" Height="11" Margin="0,0,8,0"
+                                         Fill="{Binding X11Capacitive, Converter={StaticResource BoolToLed}}"/>
+                                <TextBlock FontSize="12" Foreground="{StaticResource Text_Secondary}">
+                                    <Run Text="용량형(비금속)"/>
+                                </TextBlock>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                <Ellipse Width="11" Height="11" Margin="0,0,8,0"
+                                         Fill="{Binding X12Inductive, Converter={StaticResource BoolToLed}}"/>
+                                <TextBlock FontSize="12" Foreground="{StaticResource Text_Secondary}">
+                                    <Run Text="유도형(금속)"/>
+                                </TextBlock>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                <Ellipse Width="11" Height="11" Margin="0,0,8,0"
+                                         Fill="{Binding X13StopperFiber, Converter={StaticResource BoolToLed}}"/>
+                                <TextBlock FontSize="12" Foreground="{StaticResource Text_Secondary}">
+                                    <Run Text="스토퍼 화이버"/>
+                                </TextBlock>
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- 출력 신호 (Y) -->
+            <Border Grid.Column="1" Background="{StaticResource Bg_Card}"
+                    BorderBrush="{StaticResource Border_Normal}" BorderThickness="1"
+                    CornerRadius="8" Margin="7,0,0,0" Padding="0">
+                <StackPanel>
+                    <Border Background="{StaticResource Accent_Cyan}"
+                            CornerRadius="8,8,0,0" Padding="14,10">
+                        <TextBlock Text="■ 출력 신호 (Y)" FontSize="13"
+                                   FontWeight="Bold" Foreground="White"/>
+                    </Border>
+                    <Grid Margin="14,10,14,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/><ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                <Ellipse Width="11" Height="11" Margin="0,0,8,0"
+                                         Fill="{Binding Y20Motor, Converter={StaticResource BoolToLed}}"/>
+                                <TextBlock FontSize="12" Foreground="{StaticResource Text_Secondary}">
+                                    <Run Text="PROCESS 모터"/>
+                                </TextBlock>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                <Ellipse Width="11" Height="11" Margin="0,0,8,0"
+                                         Fill="{Binding Y21Conveyor, Converter={StaticResource BoolToLed}}"/>
+                                <TextBlock FontSize="12" Foreground="{StaticResource Text_Secondary}">
+                                    <Run Text="CONVEYOR 모터"/>
+                                </TextBlock>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                <Ellipse Width="11" Height="11" Margin="0,0,8,0"
+                                         Fill="{Binding Y22SupplyCylFwd, Converter={StaticResource BoolToLed}}"/>
+                                <TextBlock FontSize="12" Foreground="{StaticResource Text_Secondary}">
+                                    <Run Text="공급 실린더 전진"/>
+                                </TextBlock>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                <Ellipse Width="11" Height="11" Margin="0,0,8,0"
+                                         Fill="{Binding Y23SupplyCylBwd, Converter={StaticResource BoolToLed}}"/>
+                                <TextBlock FontSize="12" Foreground="{StaticResource Text_Secondary}">
+                                    <Run Text="공급 실린더 후진"/>
+                                </TextBlock>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                <Ellipse Width="11" Height="11" Margin="0,0,8,0"
+                                         Fill="{Binding Y24DistribCylFwd, Converter={StaticResource BoolToLed}}"/>
+                                <TextBlock FontSize="12" Foreground="{StaticResource Text_Secondary}">
+                                    <Run Text="분배 실린더 전진"/>
+                                </TextBlock>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                <Ellipse Width="11" Height="11" Margin="0,0,8,0"
+                                         Fill="{Binding Y25DistribCylBwd, Converter={StaticResource BoolToLed}}"/>
+                                <TextBlock FontSize="12" Foreground="{StaticResource Text_Secondary}">
+                                    <Run Text="분배 실린더 후진"/>
+                                </TextBlock>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                <Ellipse Width="11" Height="11" Margin="0,0,8,0"
+                                         Fill="{Binding Y26MachCylDown, Converter={StaticResource BoolToLed}}"/>
+                                <TextBlock FontSize="12" Foreground="{StaticResource Text_Secondary}">
+                                    <Run Text="가공 실린더 하강"/>
+                                </TextBlock>
+                            </StackPanel>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1">
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                <Ellipse Width="11" Height="11" Margin="0,0,8,0"
+                                         Fill="{Binding Y27EjectCylFwd, Converter={StaticResource BoolToLed}}"/>
+                                <TextBlock FontSize="12" Foreground="{StaticResource Text_Secondary}">
+                                    <Run Text="배출 실린더 전진"/>
+                                </TextBlock>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                <Ellipse Width="11" Height="11" Margin="0,0,8,0"
+                                         Fill="{Binding Y28StopperDown, Converter={StaticResource BoolToLed}}"/>
+                                <TextBlock FontSize="12" Foreground="{StaticResource Text_Secondary}">
+                                    <Run Text="스토퍼 하강"/>
+                                </TextBlock>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                <Ellipse Width="11" Height="11" Margin="0,0,8,0"
+                                         Fill="{Binding Y29StopperUp, Converter={StaticResource BoolToLed}}"/>
+                                <TextBlock FontSize="12" Foreground="{StaticResource Text_Secondary}">
+                                    <Run Text="스토퍼 상승"/>
+                                </TextBlock>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                <Ellipse Width="11" Height="11" Margin="0,0,8,0"
+                                         Fill="{Binding Y2ASuctionCylFwd, Converter={StaticResource BoolToLed}}"/>
+                                <TextBlock FontSize="12" Foreground="{StaticResource Text_Secondary}">
+                                    <Run Text="흡착 실린더 전진"/>
+                                </TextBlock>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                <Ellipse Width="11" Height="11" Margin="0,0,8,0"
+                                         Fill="{Binding Y2BSuctionCylBwd, Converter={StaticResource BoolToLed}}"/>
+                                <TextBlock FontSize="12" Foreground="{StaticResource Text_Secondary}">
+                                    <Run Text="흡착 실린더 후진"/>
+                                </TextBlock>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                <Ellipse Width="11" Height="11" Margin="0,0,8,0"
+                                         Fill="{Binding Y2CStoreCylFwd, Converter={StaticResource BoolToLed}}"/>
+                                <TextBlock FontSize="12" Foreground="{StaticResource Text_Secondary}">
+                                    <Run Text="저장 실린더 전진"/>
+                                </TextBlock>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                <Ellipse Width="11" Height="11" Margin="0,0,8,0"
+                                         Fill="{Binding Y2DStoreCylBwd, Converter={StaticResource BoolToLed}}"/>
+                                <TextBlock FontSize="12" Foreground="{StaticResource Text_Secondary}">
+                                    <Run Text="저장 실린더 후진"/>
+                                </TextBlock>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                <Ellipse Width="11" Height="11" Margin="0,0,8,0"
+                                         Fill="{Binding Y2ESuctionOn, Converter={StaticResource BoolToLed}}"/>
+                                <TextBlock FontSize="12" Foreground="{StaticResource Text_Secondary}">
+                                    <Run Text="흡착 ON"/>
+                                </TextBlock>
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- ══ 3. 현재 시퀀스 (최하단) ══ -->
+        <Border Grid.Row="3" Background="{StaticResource Bg_Card}"
+                BorderBrush="{StaticResource Border_Normal}" BorderThickness="1"
+                CornerRadius="8" Padding="0">
+            <StackPanel>
+                <!-- 헤더 -->
+                <Border Background="{StaticResource Accent_Blue}"
+                        CornerRadius="8,8,0,0" Padding="14,10">
+                    <Grid>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="현재 시퀀스" FontSize="13" FontWeight="Bold"
+                                       Foreground="White" VerticalAlignment="Center" Margin="0,0,16,0"/>
+                            <TextBlock Text="{Binding SequenceName}" FontSize="16" FontWeight="Black"
+                                       Foreground="White" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <TextBlock Text="{Binding SequenceStep, StringFormat=D0: {0}}"
+                                   FontSize="12" Foreground="#FFCCE0FF"
+                                   HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                    </Grid>
+                </Border>
+
+                <!-- 진행 바 -->
+                <!-- 스텝 태그 -->
+                <ItemsControl ItemsSource="{Binding SequenceSteps}" Margin="12,12,12,14">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Margin="3,4" Padding="14,8" CornerRadius="6"
+                                    BorderThickness="1.5"
+                                    Background="{Binding IsActive, Converter={StaticResource StepBgConverter}}">
+                                <Border.Style>
+                                    <Style TargetType="Border">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsActive}" Value="True">
+                                                <Setter Property="BorderBrush" Value="{StaticResource Accent_Blue}"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding IsActive}" Value="False">
+                                                <Setter Property="BorderBrush" Value="{StaticResource Border_Normal}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Border.Style>
+                                <TextBlock Text="{Binding Name}" FontSize="13"
+                                           MinWidth="72"
+                                           TextAlignment="Center"
+                                           Foreground="{Binding IsActive, Converter={StaticResource StepFgConverter}}"
+                                           FontWeight="{Binding IsActive, Converter={StaticResource StepFwConverter}}"/>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </Border>
+
+    </Grid>
+    </ScrollViewer>
+</UserControl>
