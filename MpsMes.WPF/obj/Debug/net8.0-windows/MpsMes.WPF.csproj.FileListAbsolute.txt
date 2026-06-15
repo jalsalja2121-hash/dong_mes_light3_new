@@ -353,3 +353,4 @@ C:\capstone\dong_mes_light3_new\artifacts\inpaint-filter-final\MpsMes.deps.json
 C:\capstone\dong_mes_light3_new\artifacts\inpaint-filter-final\MpsMes.runtimeconfig.json
 C:\capstone\dong_mes_light3_new\artifacts\inpaint-filter-final\MpsMes.dll
 C:\capstone\dong_mes_light3_new\artifacts\inpaint-filter-final\MpsMes.pdb
+C:\capstone\dong_mes_light3_new\MpsMes.WPF\obj\Debug\net8.0-windows\MpsMes.WPF.sourcelink.json

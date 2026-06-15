@@ -79,3 +79,4 @@ C:\capstone\dong_mes_light3_new\artifacts\inpaint-filter-verify\MpsMes.Infrastru
 C:\capstone\dong_mes_light3_new\artifacts\inpaint-filter-final\MpsMes.Infrastructure.deps.json
 C:\capstone\dong_mes_light3_new\artifacts\inpaint-filter-final\MpsMes.Infrastructure.dll
 C:\capstone\dong_mes_light3_new\artifacts\inpaint-filter-final\MpsMes.Infrastructure.pdb
+C:\capstone\dong_mes_light3_new\MpsMes.Infrastructure\obj\Debug\net8.0-windows\MpsMes.Infrastructure.sourcelink.json
