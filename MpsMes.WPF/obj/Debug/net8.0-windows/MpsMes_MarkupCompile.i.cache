@@ -16,5 +16,5 @@ C:\capstone\dong_mes_light3_new\MpsMes.WPF\App.xaml
 228-1822659106
 MainWindow.xaml;Resources\BlueTheme.xaml;Views\DbSearchView.xaml;Views\EventLogView.xaml;Views\ManualControlView.xaml;Views\MonitorView.xaml;Views\ProductionHistoryView.xaml;Views\ProductionStatusView.xaml;Views\QualityAnalysisView.xaml;Views\VisionInspectionView.xaml;
 
-True
+False
 

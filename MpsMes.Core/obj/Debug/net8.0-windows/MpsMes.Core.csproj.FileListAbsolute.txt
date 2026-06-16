@@ -67,3 +67,4 @@ C:\capstone\dong_mes_light3_new\artifacts\inpaint-filter-verify\MpsMes.Core.pdb
 C:\capstone\dong_mes_light3_new\artifacts\inpaint-filter-final\MpsMes.Core.deps.json
 C:\capstone\dong_mes_light3_new\artifacts\inpaint-filter-final\MpsMes.Core.dll
 C:\capstone\dong_mes_light3_new\artifacts\inpaint-filter-final\MpsMes.Core.pdb
+C:\capstone\dong_mes_light3_new\MpsMes.Core\obj\Debug\net8.0-windows\MpsMes.Core.sourcelink.json

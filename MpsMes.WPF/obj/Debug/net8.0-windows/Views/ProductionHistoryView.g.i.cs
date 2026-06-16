@@ -53,7 +53,7 @@ namespace MpsMes.WPF.Views {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/MpsMes;component/views/productionhistoryview.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/MpsMes;V1.0.0.0;component/views/productionhistoryview.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\..\Views\ProductionHistoryView.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);
