@@ -52,7 +52,7 @@ namespace MpsMes.WPF.Views {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/MpsMes;component/views/eventlogview.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/MpsMes;V1.0.0.0;component/views/eventlogview.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\..\Views\EventLogView.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);
