@@ -68,3 +68,15 @@ C:\capstone\dong_mes_light3_new\artifacts\inpaint-filter-final\MpsMes.Core.deps.
 C:\capstone\dong_mes_light3_new\artifacts\inpaint-filter-final\MpsMes.Core.dll
 C:\capstone\dong_mes_light3_new\artifacts\inpaint-filter-final\MpsMes.Core.pdb
 C:\capstone\dong_mes_light3_new\MpsMes.Core\obj\Debug\net8.0-windows\MpsMes.Core.sourcelink.json
+C:\project\dong_mes_light3_new\MpsMes.Core\bin\Debug\net8.0-windows\MpsMes.Core.deps.json
+C:\project\dong_mes_light3_new\MpsMes.Core\bin\Debug\net8.0-windows\MpsMes.Core.dll
+C:\project\dong_mes_light3_new\MpsMes.Core\bin\Debug\net8.0-windows\MpsMes.Core.pdb
+C:\project\dong_mes_light3_new\MpsMes.Core\obj\Debug\net8.0-windows\MpsMes.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\project\dong_mes_light3_new\MpsMes.Core\obj\Debug\net8.0-windows\MpsMes.Core.AssemblyInfoInputs.cache
+C:\project\dong_mes_light3_new\MpsMes.Core\obj\Debug\net8.0-windows\MpsMes.Core.AssemblyInfo.cs
+C:\project\dong_mes_light3_new\MpsMes.Core\obj\Debug\net8.0-windows\MpsMes.Core.csproj.CoreCompileInputs.cache
+C:\project\dong_mes_light3_new\MpsMes.Core\obj\Debug\net8.0-windows\MpsMes.Core.sourcelink.json
+C:\project\dong_mes_light3_new\MpsMes.Core\obj\Debug\net8.0-windows\MpsMes.Core.dll
+C:\project\dong_mes_light3_new\MpsMes.Core\obj\Debug\net8.0-windows\refint\MpsMes.Core.dll
+C:\project\dong_mes_light3_new\MpsMes.Core\obj\Debug\net8.0-windows\MpsMes.Core.pdb
+C:\project\dong_mes_light3_new\MpsMes.Core\obj\Debug\net8.0-windows\ref\MpsMes.Core.dll

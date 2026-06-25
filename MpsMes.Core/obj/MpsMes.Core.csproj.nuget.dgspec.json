@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\capstone\\dong_mes_light3_new\\MpsMes.Core\\MpsMes.Core.csproj": {}
+    "C:\\project\\dong_mes_light3_new\\MpsMes.Core\\MpsMes.Core.csproj": {}
   },
   "projects": {
-    "C:\\capstone\\dong_mes_light3_new\\MpsMes.Core\\MpsMes.Core.csproj": {
+    "C:\\project\\dong_mes_light3_new\\MpsMes.Core\\MpsMes.Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\capstone\\dong_mes_light3_new\\MpsMes.Core\\MpsMes.Core.csproj",
+        "projectUniqueName": "C:\\project\\dong_mes_light3_new\\MpsMes.Core\\MpsMes.Core.csproj",
         "projectName": "MpsMes.Core",
-        "projectPath": "C:\\capstone\\dong_mes_light3_new\\MpsMes.Core\\MpsMes.Core.csproj",
-        "packagesPath": "C:\\Users\\USER\\.nuget\\packages\\",
-        "outputPath": "C:\\capstone\\dong_mes_light3_new\\MpsMes.Core\\obj\\",
+        "projectPath": "C:\\project\\dong_mes_light3_new\\MpsMes.Core\\MpsMes.Core.csproj",
+        "packagesPath": "C:\\Users\\0\\.nuget\\packages\\",
+        "outputPath": "C:\\project\\dong_mes_light3_new\\MpsMes.Core\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\USER\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\0\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -25,8 +25,7 @@
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net8.0-windows": {
-            "framework": "net8.0-windows7.0",
+          "net8.0-windows7.0": {
             "targetAlias": "net8.0-windows",
             "projectReferences": {}
           }
@@ -41,11 +40,10 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "10.0.300"
+        "SdkAnalysisLevel": "9.0.300"
       },
       "frameworks": {
-        "net8.0-windows": {
-          "framework": "net8.0-windows7.0",
+        "net8.0-windows7.0": {
           "targetAlias": "net8.0-windows",
           "imports": [
             "net461",
@@ -63,7 +61,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.300/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.313/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
