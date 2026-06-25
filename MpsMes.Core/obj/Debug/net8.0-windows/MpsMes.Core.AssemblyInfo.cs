@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MpsMes.Core")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+aa6bb8a4652de7b3b36aa54c145e659b27d45014")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+eb4bf843511efbcb11f765f3be9d095adc13dfbb")]
 [assembly: System.Reflection.AssemblyProductAttribute("MpsMes.Core")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MpsMes.Core")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

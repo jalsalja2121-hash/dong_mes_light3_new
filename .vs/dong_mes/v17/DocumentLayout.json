@@ -1,12 +1,41 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\project\\dong_mes_light3\\",
-  "Documents": [],
+  "WorkspaceRootPath": "C:\\project\\dong_mes_light3_new\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{059CF041-3B1D-43C9-A8EA-2CB58BEDDCD2}|MpsMes.ViewModels\\MpsMes.ViewModels.csproj|c:\\project\\dong_mes_light3_new\\mpsmes.viewmodels\\mainviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{059CF041-3B1D-43C9-A8EA-2CB58BEDDCD2}|MpsMes.ViewModels\\MpsMes.ViewModels.csproj|solutionrelative:mpsmes.viewmodels\\mainviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": []
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "MainViewModel.cs",
+              "DocumentMoniker": "C:\\project\\dong_mes_light3_new\\MpsMes.ViewModels\\MainViewModel.cs",
+              "RelativeDocumentMoniker": "MpsMes.ViewModels\\MainViewModel.cs",
+              "ToolTip": "C:\\project\\dong_mes_light3_new\\MpsMes.ViewModels\\MainViewModel.cs",
+              "RelativeToolTip": "MpsMes.ViewModels\\MainViewModel.cs",
+              "ViewState": "AgIAANYAAAAAAAAAAAAAwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-25T11:11:18.18Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
