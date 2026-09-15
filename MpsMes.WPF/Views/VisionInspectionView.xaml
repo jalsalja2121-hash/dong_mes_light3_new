@@ -35,6 +35,7 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
                 <Grid Grid.Row="0" Margin="0,0,0,6">
@@ -137,6 +138,59 @@
                     <TextBlock Text="{Binding CurrentNonMetalQty}" FontSize="12" FontWeight="Bold"
                                Foreground="{StaticResource Accent_Cyan}"/>
                 </StackPanel>
+                <Expander Grid.Row="4" Header="카메라 필터 · HSV 색상 선택 / 캐니 윤곽선" Margin="0,8,0,0" IsExpanded="True">
+                    <StackPanel Margin="0,6,0,0">
+                        <WrapPanel>
+                            <CheckBox Content="HSV" IsChecked="{Binding HsvEnabled}" Margin="0,0,16,6"/>
+                            <CheckBox Content="캐니 엣지 (초록 윤곽선)" IsChecked="{Binding CannyEnabled}" Margin="0,0,16,6"/>
+                            <CheckBox Content="저장·검사 영상에도 적용" IsChecked="{Binding ApplyFiltersToInspection}" Margin="0,0,0,6"/>
+                        </WrapPanel>
+                        <UniformGrid Columns="2">
+                            <DockPanel Margin="0,2,12,2">
+                                <TextBlock Text="색상 시작" Width="66" VerticalAlignment="Center"/>
+                                <TextBlock DockPanel.Dock="Right" Text="{Binding HueMin}" Width="30" TextAlignment="Right"/>
+                                <Slider Minimum="0" Maximum="179" TickFrequency="1" IsSnapToTickEnabled="True" Value="{Binding HueMin, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            </DockPanel>
+                            <DockPanel Margin="0,2,12,2">
+                                <TextBlock Text="색상 끝" Width="66" VerticalAlignment="Center"/>
+                                <TextBlock DockPanel.Dock="Right" Text="{Binding HueMax}" Width="30" TextAlignment="Right"/>
+                                <Slider Minimum="0" Maximum="179" TickFrequency="1" IsSnapToTickEnabled="True" Value="{Binding HueMax, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            </DockPanel>
+                            <DockPanel Margin="0,2,12,2">
+                                <TextBlock Text="채도 최소" Width="66" VerticalAlignment="Center"/>
+                                <TextBlock DockPanel.Dock="Right" Text="{Binding SaturationMin}" Width="30" TextAlignment="Right"/>
+                                <Slider Minimum="0" Maximum="255" TickFrequency="1" IsSnapToTickEnabled="True" Value="{Binding SaturationMin, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            </DockPanel>
+                            <DockPanel Margin="0,2,12,2">
+                                <TextBlock Text="채도 최대" Width="66" VerticalAlignment="Center"/>
+                                <TextBlock DockPanel.Dock="Right" Text="{Binding SaturationMax}" Width="30" TextAlignment="Right"/>
+                                <Slider Minimum="0" Maximum="255" TickFrequency="1" IsSnapToTickEnabled="True" Value="{Binding SaturationMax, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            </DockPanel>
+                            <DockPanel Margin="0,2,12,2">
+                                <TextBlock Text="밝기 최소" Width="66" VerticalAlignment="Center"/>
+                                <TextBlock DockPanel.Dock="Right" Text="{Binding ValueMin}" Width="30" TextAlignment="Right"/>
+                                <Slider Minimum="0" Maximum="255" TickFrequency="1" IsSnapToTickEnabled="True" Value="{Binding ValueMin, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            </DockPanel>
+                            <DockPanel Margin="0,2,12,2">
+                                <TextBlock Text="밝기 최대" Width="66" VerticalAlignment="Center"/>
+                                <TextBlock DockPanel.Dock="Right" Text="{Binding ValueMax}" Width="30" TextAlignment="Right"/>
+                                <Slider Minimum="0" Maximum="255" TickFrequency="1" IsSnapToTickEnabled="True" Value="{Binding ValueMax, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            </DockPanel>
+                            <DockPanel Margin="0,2,12,2">
+                                <TextBlock Text="캐니 낮음" Width="66" VerticalAlignment="Center"/>
+                                <TextBlock DockPanel.Dock="Right" Text="{Binding CannyLow}" Width="30" TextAlignment="Right"/>
+                                <Slider Minimum="0" Maximum="255" TickFrequency="1" IsSnapToTickEnabled="True" Value="{Binding CannyLow, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            </DockPanel>
+                            <DockPanel Margin="0,2,12,2">
+                                <TextBlock Text="캐니 높음" Width="66" VerticalAlignment="Center"/>
+                                <TextBlock DockPanel.Dock="Right" Text="{Binding CannyHigh}" Width="30" TextAlignment="Right"/>
+                                <Slider Minimum="0" Maximum="255" TickFrequency="1" IsSnapToTickEnabled="True" Value="{Binding CannyHigh, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            </DockPanel>
+                        </UniformGrid>
+                        <TextBlock Text="HSV 기본값은 전체 색상입니다. 색상 시작 > 끝이면 빨강 경계 범위를 선택합니다. 채도·밝기·캐니 값은 작은 값부터 적용합니다."
+                                   TextWrapping="Wrap" FontSize="11" Foreground="{StaticResource Text_Muted}" Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Expander>
             </Grid>
 
             <!-- 카메라 영상 -->

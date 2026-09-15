@@ -1,0 +1,24 @@
+using MpsMes.Core.Interfaces;
+using MpsMes.Infrastructure.Vision;
+using OpenCvSharp;
+static void Check(bool ok, string name) { if (!ok) throw new Exception(name); Console.WriteLine("PASS: " + name); }
+using var src = new Mat(100, 100, MatType.CV_8UC3, Scalar.Black);
+Cv2.Rectangle(src, new Rect(20, 20, 60, 60), new Scalar(0, 0, 255), -1);
+using var original = src.Clone();
+using var disabled = CameraFrameFilter.Apply(src, new() { HsvEnabled = false, CannyEnabled = false });
+Check(Cv2.Norm(src, disabled) == 0, "disabled preserves frame");
+using var full = CameraFrameFilter.Apply(src, new() { CannyEnabled = false });
+Check(Cv2.Norm(src, full) == 0, "full HSV range preserves frame");
+using var red = CameraFrameFilter.Apply(src, new() { HueMin = 170, HueMax = 10, SaturationMin = 100, CannyEnabled = false });
+Check(red.At<Vec3b>(40,40).Item2 == 255, "wrapped hue includes red");
+using var blue = CameraFrameFilter.Apply(src, new() { HueMin = 100, HueMax = 130, SaturationMin = 100, CannyEnabled = false });
+Check(Cv2.Norm(blue) == 0, "HSV excludes other colors");
+using var edges = CameraFrameFilter.Apply(src, new() { HsvEnabled = false });
+using var green = new Mat();
+Cv2.InRange(edges, new Scalar(0,255,0), new Scalar(0,255,0), green);
+Check(Cv2.CountNonZero(green) > 0, "Canny overlays edges");
+using var excluded = CameraFrameFilter.Apply(src, new() { HueMin = 100, HueMax = 130, SaturationMin = 100 });
+Check(Cv2.Norm(excluded) == 0, "edges respect HSV mask");
+using var reversed = CameraFrameFilter.Apply(src, new() { HsvEnabled = false, CannyLow = 150, CannyHigh = 50 });
+Check(Cv2.Norm(edges, reversed) == 0, "reversed thresholds normalized");
+Check(Cv2.Norm(src, original) == 0, "source is unchanged");

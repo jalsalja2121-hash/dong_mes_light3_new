@@ -44,6 +44,7 @@ public interface IVisionService : IDisposable
 
     void StartPreview();
     void StopPreview();
+    void SetCameraFilters(CameraFilterSettings settings);
     Task<VisionResult> InspectAsync();
     Task<VisionResult> InspectWithCaptureAsync(); // 딜레이 없이 즉시 캡처+검사
 }
