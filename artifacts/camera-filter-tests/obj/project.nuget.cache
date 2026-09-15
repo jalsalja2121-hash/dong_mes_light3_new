@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "MeW06Pks10U=",
+  "success": true,
+  "projectFilePath": "C:\\project\\dong_mes_light3_new\\artifacts\\camera-filter-tests\\FilterTests.csproj",
+  "expectedPackageFiles": [
+    "C:\\project\\dong_mes_light3_new\\artifacts\\nuget-packages\\opencvsharp4\\4.9.0.20240103\\opencvsharp4.4.9.0.20240103.nupkg.sha512",
+    "C:\\project\\dong_mes_light3_new\\artifacts\\nuget-packages\\opencvsharp4.runtime.win\\4.9.0.20240103\\opencvsharp4.runtime.win.4.9.0.20240103.nupkg.sha512"
+  ],
+  "logs": []
+}

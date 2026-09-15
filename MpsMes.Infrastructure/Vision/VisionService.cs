@@ -27,6 +27,23 @@ public class VisionService : IVisionService
     private readonly string _serverHost;
     private readonly int _serverPort;
     private string _modelPath = string.Empty;
+    private CameraFilterSettings _cameraFilters = new();
+
+    public void SetCameraFilters(CameraFilterSettings settings)
+    {
+        ArgumentNullException.ThrowIfNull(settings);
+        Volatile.Write(ref _cameraFilters, settings);
+        _showAnnotation = false;
+    }
+
+    private Mat ApplyCameraFilters(Mat source, bool inspection = false)
+    {
+        var settings = Volatile.Read(ref _cameraFilters);
+        using var corrected = ApplyAntiGlareFilter(source);
+        return inspection && !settings.ApplyToInspection
+            ? corrected.Clone()
+            : CameraFrameFilter.Apply(corrected, settings);
+    }
 
     // 마지막 검사 어노테이션 이미지 (프리뷰에 덮어씌워지지 않도록 유지)
     private byte[]? _lastAnnotatedFrame = null;
@@ -312,7 +329,7 @@ public class VisionService : IVisionService
                     else
                     {
                         // 일반 프리뷰 → 빛반사 필터 적용
-                        using var filtered = ApplyAntiGlareFilter(mat);
+                        using var filtered = ApplyCameraFilters(mat);
                         bytes = filtered.ToBytes(".jpg",
                             new ImageEncodingParam(ImwriteFlags.JpegQuality, 85));
                     }
@@ -383,7 +400,7 @@ public class VisionService : IVisionService
         {
             _showAnnotation = false;
 
-            using var filtered = ApplyAntiGlareFilter(capturedMat);
+            using var filtered = ApplyCameraFilters(capturedMat, inspection: true);
 
             Directory.CreateDirectory(_saveFolder);
             var fileName  = $"{DateTime.Now:yyyyMMdd_HHmmss_fff}.jpg";
@@ -466,7 +483,7 @@ public class VisionService : IVisionService
             if (mat.Empty()) throw new VisionException("프레임 캡처 실패");
 
             // 빛반사 필터 적용 후 저장/전송
-            using var filtered = ApplyAntiGlareFilter(mat);
+            using var filtered = ApplyCameraFilters(mat, inspection: true);
 
             Directory.CreateDirectory(_saveFolder);
             var fileName  = $"{DateTime.Now:yyyyMMdd_HHmmss_fff}.jpg";

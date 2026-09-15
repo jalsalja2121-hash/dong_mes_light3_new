@@ -231,6 +231,45 @@ public partial class VisionInspectionViewModel : ObservableObject
     [ObservableProperty] private int           _selectedCameraIndex = 0;
     [ObservableProperty] private string        _selectedCameraName  = "카메라 선택";
 
+    [ObservableProperty] private bool _hsvEnabled = true;
+    [ObservableProperty] private bool _cannyEnabled = true;
+    [ObservableProperty] private bool _applyFiltersToInspection = false;
+    [ObservableProperty] private int _hueMin = 0;
+    [ObservableProperty] private int _hueMax = 179;
+    [ObservableProperty] private int _saturationMin = 0;
+    [ObservableProperty] private int _saturationMax = 255;
+    [ObservableProperty] private int _valueMin = 0;
+    [ObservableProperty] private int _valueMax = 255;
+    [ObservableProperty] private int _cannyLow = 50;
+    [ObservableProperty] private int _cannyHigh = 150;
+
+    partial void OnHsvEnabledChanged(bool value) => UpdateCameraFilters();
+    partial void OnCannyEnabledChanged(bool value) => UpdateCameraFilters();
+    partial void OnApplyFiltersToInspectionChanged(bool value) => UpdateCameraFilters();
+    partial void OnHueMinChanged(int value) => UpdateCameraFilters();
+    partial void OnHueMaxChanged(int value) => UpdateCameraFilters();
+    partial void OnSaturationMinChanged(int value) => UpdateCameraFilters();
+    partial void OnSaturationMaxChanged(int value) => UpdateCameraFilters();
+    partial void OnValueMinChanged(int value) => UpdateCameraFilters();
+    partial void OnValueMaxChanged(int value) => UpdateCameraFilters();
+    partial void OnCannyLowChanged(int value) => UpdateCameraFilters();
+    partial void OnCannyHighChanged(int value) => UpdateCameraFilters();
+
+    private void UpdateCameraFilters() => _vision.SetCameraFilters(new CameraFilterSettings
+    {
+        HsvEnabled = HsvEnabled,
+        CannyEnabled = CannyEnabled,
+        ApplyToInspection = ApplyFiltersToInspection,
+        HueMin = HueMin,
+        HueMax = HueMax,
+        SaturationMin = SaturationMin,
+        SaturationMax = SaturationMax,
+        ValueMin = ValueMin,
+        ValueMax = ValueMax,
+        CannyLow = CannyLow,
+        CannyHigh = CannyHigh,
+    });
+
     // 연결된 카메라 목록
     public ObservableCollection<CameraDevice>  AvailableCameras { get; } = new();
     public ObservableCollection<VisionInspection> RecentResults { get; } = new();
