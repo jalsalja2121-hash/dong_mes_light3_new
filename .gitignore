@@ -1,0 +1,31 @@
+# Visual Studio local state
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# .NET build and test output
+**/[Bb]in/
+**/[Oo]bj/
+TestResults/
+
+# Local verification builds, package caches and backup copies
+/artifacts/
+/backups/
+
+# Python environments and generated state
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+/Ultralytics/settings.json
+
+# Runtime captures (do not ignore source images or model weights)
+/Images/
+/MpsMes.WPF/Images/
+
+# OS temporary files
+Thumbs.db
+.DS_Store
