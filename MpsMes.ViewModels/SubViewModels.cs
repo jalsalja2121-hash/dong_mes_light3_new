@@ -232,6 +232,14 @@ public partial class VisionInspectionViewModel : ObservableObject
     [ObservableProperty] private string        _selectedCameraName  = "카메라 선택";
 
     [ObservableProperty] private bool _hsvEnabled = true;
+    [ObservableProperty] private bool _claheEnabled = true;
+    [ObservableProperty] private bool _gammaEnabled = true;
+    [ObservableProperty] private int _hueMin = 0;
+    [ObservableProperty] private int _hueMax = 179;
+    [ObservableProperty] private int _saturationMin = 0;
+    [ObservableProperty] private int _saturationMax = 40;
+    [ObservableProperty] private int _valueMin = 245;
+    [ObservableProperty] private int _valueMax = 255;
     [ObservableProperty] private bool _cannyEnabled = false;
     [ObservableProperty] private bool _applyFiltersToInspection = false;
 
@@ -239,9 +247,37 @@ public partial class VisionInspectionViewModel : ObservableObject
     partial void OnCannyEnabledChanged(bool value) => UpdateCameraFilters();
     partial void OnApplyFiltersToInspectionChanged(bool value) => UpdateCameraFilters();
 
+    partial void OnClaheEnabledChanged(bool value) => UpdateCameraFilters();
+    partial void OnGammaEnabledChanged(bool value) => UpdateCameraFilters();
+    partial void OnHueMinChanged(int value) { if (value > HueMax) HueMax = value; UpdateCameraFilters(); }
+    partial void OnHueMaxChanged(int value) { if (value < HueMin) HueMin = value; UpdateCameraFilters(); }
+    partial void OnSaturationMinChanged(int value) { if (value > SaturationMax) SaturationMax = value; UpdateCameraFilters(); }
+    partial void OnSaturationMaxChanged(int value) { if (value < SaturationMin) SaturationMin = value; UpdateCameraFilters(); }
+    partial void OnValueMinChanged(int value) { if (value > ValueMax) ValueMax = value; UpdateCameraFilters(); }
+    partial void OnValueMaxChanged(int value) { if (value < ValueMin) ValueMin = value; UpdateCameraFilters(); }
+
+    [RelayCommand]
+    private void ResetHsv()
+    {
+        var defaults = new CameraFilterSettings();
+        HueMin = defaults.HueMin;
+        HueMax = defaults.HueMax;
+        SaturationMin = defaults.SaturationMin;
+        SaturationMax = defaults.SaturationMax;
+        ValueMin = defaults.ValueMin;
+        ValueMax = defaults.ValueMax;
+    }
     private void UpdateCameraFilters() => _vision.SetCameraFilters(new CameraFilterSettings
     {
         HsvEnabled = HsvEnabled,
+        ClaheEnabled = ClaheEnabled,
+        GammaEnabled = GammaEnabled,
+        HueMin = HueMin,
+        HueMax = HueMax,
+        SaturationMin = SaturationMin,
+        SaturationMax = SaturationMax,
+        ValueMin = ValueMin,
+        ValueMax = ValueMax,
         CannyEnabled = CannyEnabled,
         ApplyToInspection = ApplyFiltersToInspection,
     });
