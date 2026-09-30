@@ -142,10 +142,45 @@
                     <StackPanel Margin="0,6,0,0">
                         <WrapPanel>
                             <CheckBox Content="HSV 빛반사 완화 ON/OFF" IsChecked="{Binding HsvEnabled}" Margin="0,0,16,6"/>
+                            <CheckBox Content="CLAHE ON/OFF" IsChecked="{Binding ClaheEnabled}" Margin="0,0,16,6"/>
+                            <CheckBox Content="감마 ON/OFF" IsChecked="{Binding GammaEnabled}" Margin="0,0,16,6"/>
                             <CheckBox Content="캐니 엣지 ON/OFF" IsChecked="{Binding CannyEnabled}" Margin="0,0,16,6"/>
                             <CheckBox Content="저장·검사 영상에도 적용" IsChecked="{Binding ApplyFiltersToInspection}" Margin="0,0,0,6"/>
                         </WrapPanel>
-                        <TextBlock Text="HSV는 밝은 흰 반사광을 완화하고, 캐니 엣지는 초록 윤곽선을 표시합니다. 수치는 고정값으로 적용됩니다."
+                        <UniformGrid Columns="2" IsEnabled="{Binding HsvEnabled}">
+                            <DockPanel Margin="0,3,12,3">
+                                <TextBlock Text="H 최소" Width="48" VerticalAlignment="Center"/>
+                                <TextBlock DockPanel.Dock="Right" Text="{Binding HueMin}" Width="30" TextAlignment="Right"/>
+                                <Slider Minimum="0" Maximum="179" TickFrequency="1" IsSnapToTickEnabled="True" Value="{Binding HueMin, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            </DockPanel>
+                            <DockPanel Margin="0,3,12,3">
+                                <TextBlock Text="H 최대" Width="48" VerticalAlignment="Center"/>
+                                <TextBlock DockPanel.Dock="Right" Text="{Binding HueMax}" Width="30" TextAlignment="Right"/>
+                                <Slider Minimum="0" Maximum="179" TickFrequency="1" IsSnapToTickEnabled="True" Value="{Binding HueMax, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            </DockPanel>
+                            <DockPanel Margin="0,3,12,3">
+                                <TextBlock Text="S 최소" Width="48" VerticalAlignment="Center"/>
+                                <TextBlock DockPanel.Dock="Right" Text="{Binding SaturationMin}" Width="30" TextAlignment="Right"/>
+                                <Slider Minimum="0" Maximum="255" TickFrequency="1" IsSnapToTickEnabled="True" Value="{Binding SaturationMin, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            </DockPanel>
+                            <DockPanel Margin="0,3,12,3">
+                                <TextBlock Text="S 최대" Width="48" VerticalAlignment="Center"/>
+                                <TextBlock DockPanel.Dock="Right" Text="{Binding SaturationMax}" Width="30" TextAlignment="Right"/>
+                                <Slider Minimum="0" Maximum="255" TickFrequency="1" IsSnapToTickEnabled="True" Value="{Binding SaturationMax, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            </DockPanel>
+                            <DockPanel Margin="0,3,12,3">
+                                <TextBlock Text="V 최소" Width="48" VerticalAlignment="Center"/>
+                                <TextBlock DockPanel.Dock="Right" Text="{Binding ValueMin}" Width="30" TextAlignment="Right"/>
+                                <Slider Minimum="0" Maximum="255" TickFrequency="1" IsSnapToTickEnabled="True" Value="{Binding ValueMin, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            </DockPanel>
+                            <DockPanel Margin="0,3,12,3">
+                                <TextBlock Text="V 최대" Width="48" VerticalAlignment="Center"/>
+                                <TextBlock DockPanel.Dock="Right" Text="{Binding ValueMax}" Width="30" TextAlignment="Right"/>
+                                <Slider Minimum="0" Maximum="255" TickFrequency="1" IsSnapToTickEnabled="True" Value="{Binding ValueMax, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            </DockPanel>
+                        </UniformGrid>
+                        <Button Content="HSV 기본값 복원" Command="{Binding ResetHsvCommand}" HorizontalAlignment="Left" Padding="10,3" Margin="0,4,0,4"/>
+                        <TextBlock Text="HSV 기본값: H 0~179 · S 0~40 · V 245~255. 선택한 범위를 반사광 후보로 보정합니다. CLAHE·감마·캐니는 고정 수치로 켜고 끕니다."
                                    TextWrapping="Wrap" FontSize="11" Foreground="{StaticResource Text_Muted}" Margin="0,4,0,0"/>
                     </StackPanel>
                 </Expander>

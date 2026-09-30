@@ -10,13 +10,11 @@ public static class CameraFrameFilter
     // https://docs.opencv.org/4.x/da/d5c/tutorial_canny_detector.html
     private const double CannyLow = 60;
     private const double CannyHigh = 150;
-    private const int GlareValueMin = 245;
-    private const int GlareSaturationMax = 40;
     private const double MaxInpaintAreaRatio = 0.03;
 
     public static Mat Apply(Mat source, CameraFilterSettings settings)
     {
-        var output = settings.HsvEnabled ? ApplyAntiGlareFilter(source) : source.Clone();
+        var output = ApplyAntiGlareFilter(source, settings);
         try
         {
             if (settings.CannyEnabled)
@@ -37,33 +35,37 @@ public static class CameraFrameFilter
             throw;
         }
     }
-    // ── 빛반사 방지 필터 ─────────────────────────────────────────────
-    // 강한 백색 반사광을 Telea Inpaint로 복원한 뒤 CLAHE와 감마 보정을 적용한다.
-    private static Mat ApplyAntiGlareFilter(Mat src)
+    // HSV, CLAHE and gamma are independently switchable; processing order is unchanged.
+    private static Mat ApplyAntiGlareFilter(Mat src, CameraFilterSettings settings)
     {
         var dst = new Mat();
         try
         {
-            using var inpainted = RemoveSpecularGlare(src);
+            using var inpainted = settings.HsvEnabled
+                ? RemoveSpecularGlare(src, settings)
+                : src.Clone();
+            if (settings.ClaheEnabled)
+            {
+                using var lab = new Mat();
+                Cv2.CvtColor(inpainted, lab, ColorConversionCodes.BGR2Lab);
+                var channels = Cv2.Split(lab);
+                try
+                {
+                    using var clahe = Cv2.CreateCLAHE(1.5, new Size(8, 8));
+                    clahe.Apply(channels[0], channels[0]);
+                    Cv2.Merge(channels, lab);
+                    Cv2.CvtColor(lab, dst, ColorConversionCodes.Lab2BGR);
+                }
+                finally
+                {
+                    foreach (var channel in channels) channel.Dispose();
+                }
+            }
+            else
+                inpainted.CopyTo(dst);
 
-            // LAB 색공간 → L채널에만 CLAHE 적용
-            using var lab = new Mat();
-            Cv2.CvtColor(inpainted, lab, ColorConversionCodes.BGR2Lab);
-            var channels = Cv2.Split(lab);
-
-            // clipLimit 1.5: 반사 억제와 화질 균형
-            using var clahe = Cv2.CreateCLAHE(
-                clipLimit: 1.5,
-                tileGridSize: new OpenCvSharp.Size(8, 8));
-            clahe.Apply(channels[0], channels[0]);
-
-            Cv2.Merge(channels, lab);
-            Cv2.CvtColor(lab, dst, ColorConversionCodes.Lab2BGR);
-
-            // 감마 1.10: Inpaint 후 남은 밝은 반사를 약하게 억제한다.
-            ApplyGamma(dst, dst, gamma: 1.10);
-
-            foreach (var ch in channels) ch.Dispose();
+            if (settings.GammaEnabled)
+                ApplyGamma(dst, dst, gamma: 1.10);
             return dst;
         }
         catch
@@ -72,8 +74,7 @@ public static class CameraFrameFilter
             return dst;
         }
     }
-
-    private static Mat RemoveSpecularGlare(Mat src)
+    private static Mat RemoveSpecularGlare(Mat src, CameraFilterSettings settings)
     {
         var result = new Mat();
         using var hsv = new Mat();
@@ -87,8 +88,14 @@ public static class CameraFrameFilter
         // Bright defects can also match; restrict the inpaint area conservatively.
         Cv2.InRange(
             hsv,
-            new Scalar(0, 0, GlareValueMin),
-            new Scalar(179, GlareSaturationMax, 255),
+            new Scalar(
+                Math.Clamp(Math.Min(settings.HueMin, settings.HueMax), 0, 179),
+                Math.Clamp(Math.Min(settings.SaturationMin, settings.SaturationMax), 0, 255),
+                Math.Clamp(Math.Min(settings.ValueMin, settings.ValueMax), 0, 255)),
+            new Scalar(
+                Math.Clamp(Math.Max(settings.HueMin, settings.HueMax), 0, 179),
+                Math.Clamp(Math.Max(settings.SaturationMin, settings.SaturationMax), 0, 255),
+                Math.Clamp(Math.Max(settings.ValueMin, settings.ValueMax), 0, 255)),
             glareMask);
 
         Cv2.MorphologyEx(

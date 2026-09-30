@@ -12,14 +12,14 @@ using var src = new Mat(100, 100, MatType.CV_8UC3, new Scalar(60, 60, 60));
 Cv2.Rectangle(src, new Rect(20, 20, 60, 60), new Scalar(0, 0, 180), -1);
 Cv2.Circle(src, new Point(50, 50), 3, Scalar.White, -1);
 using var original = src.Clone();
-using var disabled = CameraFrameFilter.Apply(src, new() { HsvEnabled = false, CannyEnabled = false });
+using var disabled = CameraFrameFilter.Apply(src, new() { HsvEnabled = false, ClaheEnabled = false, GammaEnabled = false, CannyEnabled = false });
 Check(Cv2.Norm(src, disabled) == 0, "OFF preserves original frame");
 using var corrected = CameraFrameFilter.Apply(src, new() { HsvEnabled = true, CannyEnabled = false });
 var spot = corrected.At<Vec3b>(50, 50);
 Check(Math.Max(spot.Item0, Math.Max(spot.Item1, spot.Item2)) < 248, "HSV reduces small white glare");
 var red = corrected.At<Vec3b>(35, 35);
 Check(red.Item2 > red.Item0 && red.Item2 > red.Item1, "HSV preserves red material");
-using var edges = CameraFrameFilter.Apply(src, new() { HsvEnabled = false, CannyEnabled = true });
+using var edges = CameraFrameFilter.Apply(src, new() { HsvEnabled = false, ClaheEnabled = false, GammaEnabled = false, CannyEnabled = true });
 using var green = new Mat();
 Cv2.InRange(edges, new Scalar(0, 255, 0), new Scalar(0, 255, 0), green);
 Check(Cv2.CountNonZero(green) > 0, "Canny ON displays contours");
@@ -29,7 +29,7 @@ using var white = new Mat(100, 100, MatType.CV_8UC3, Scalar.White);
 using var whiteResult = CameraFrameFilter.Apply(white, new());
 Check(whiteResult.At<Vec3b>(50, 50).Item0 > 240, "large white surface is not inpainted");
 Check(Cv2.Norm(src, original) == 0, "source is unchanged");
-Check(new CameraFilterSettings().HsvEnabled && !new CameraFilterSettings().CannyEnabled, "defaults enable glare correction only");
+Check(new CameraFilterSettings().HsvEnabled && !new CameraFilterSettings().CannyEnabled, "defaults leave Canny disabled");
 
 // Near-saturated glare below the former V=248 cutoff.
 using var nearGlare = new Mat(160, 160, MatType.CV_8UC3, new Scalar(90, 90, 90));
@@ -52,7 +52,7 @@ Check(broadResult.At<Vec3b>(75, 75).Item0 > 240, "broad white feature is protect
 
 using var subtle = new Mat(160, 160, MatType.CV_8UC3, new Scalar(80, 80, 80));
 Cv2.Rectangle(subtle, new Rect(40, 40, 80, 80), new Scalar(150, 150, 150), -1);
-using var subtleResult = CameraFrameFilter.Apply(subtle, new() { HsvEnabled = false, CannyEnabled = true });
+using var subtleResult = CameraFrameFilter.Apply(subtle, new() { HsvEnabled = false, ClaheEnabled = false, GammaEnabled = false, CannyEnabled = true });
 using var subtleEdges = new Mat();
 Cv2.InRange(subtleResult, new Scalar(0, 255, 0), new Scalar(0, 255, 0), subtleEdges);
 Check(Cv2.CountNonZero(subtleEdges) > 200, "moderate-contrast contour is retained");
@@ -65,7 +65,26 @@ for (int x = 0; x < noise.Cols; x++)
     byte value = (byte)(100 + random.Next(-8, 9));
     noise.Set(y, x, new Vec3b(value, value, value));
 }
-using var noiseResult = CameraFrameFilter.Apply(noise, new() { HsvEnabled = false, CannyEnabled = true });
+using var noiseResult = CameraFrameFilter.Apply(noise, new() { HsvEnabled = false, ClaheEnabled = false, GammaEnabled = false, CannyEnabled = true });
 using var noiseEdges = new Mat();
 Cv2.InRange(noiseResult, new Scalar(0, 255, 0), new Scalar(0, 255, 0), noiseEdges);
 Check(Cv2.CountNonZero(noiseEdges) == 0, "low-amplitude noise does not create contours");
+
+var hsvOnly = new CameraFilterSettings { ClaheEnabled = false, GammaEnabled = false };
+using var hsvResult = CameraFrameFilter.Apply(nearGlare, hsvOnly);
+Check(hsvResult.At<Vec3b>(80, 80).Item0 < 220, "HSV works independently");
+using var excludedValue = CameraFrameFilter.Apply(nearGlare, hsvOnly with { ValueMin = 250 });
+Check(Cv2.Norm(nearGlare, excludedValue) == 0, "V slider excludes highlight below threshold");
+using var excludedHue = CameraFrameFilter.Apply(nearGlare, hsvOnly with { HueMin = 20 });
+Check(Cv2.Norm(nearGlare, excludedHue) == 0, "H slider changes selected region");
+using var excludedSaturation = CameraFrameFilter.Apply(nearGlare, hsvOnly with { SaturationMin = 10 });
+Check(Cv2.Norm(nearGlare, excludedSaturation) == 0, "S slider changes selected region");
+using var normalized = CameraFrameFilter.Apply(nearGlare, hsvOnly with { ValueMin = 255, ValueMax = 245 });
+Check(Cv2.Norm(hsvResult, normalized) == 0, "reversed ranges normalize safely");
+using var gammaOnly = CameraFrameFilter.Apply(nearGlare, new() { HsvEnabled = false, ClaheEnabled = false, GammaEnabled = true });
+Check(gammaOnly.At<Vec3b>(0, 0).Item0 < 90, "gamma works while HSV is OFF");
+using var claheOnly = CameraFrameFilter.Apply(nearGlare, new() { HsvEnabled = false, ClaheEnabled = true, GammaEnabled = false });
+Check(Cv2.Norm(nearGlare, claheOnly) > 0, "CLAHE works while HSV is OFF");
+Check(hsvOnly.HueMin == 0 && hsvOnly.HueMax == 179
+    && hsvOnly.SaturationMin == 0 && hsvOnly.SaturationMax == 40
+    && hsvOnly.ValueMin == 245 && hsvOnly.ValueMax == 255, "HSV defaults match previous fixed values");
