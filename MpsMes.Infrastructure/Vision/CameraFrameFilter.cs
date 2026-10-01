@@ -42,7 +42,7 @@ public static class CameraFrameFilter
         try
         {
             using var inpainted = settings.HsvEnabled
-                ? RemoveSpecularGlare(src, settings)
+                ? RemoveSpecularGlare(src)
                 : src.Clone();
             if (settings.ClaheEnabled)
             {
@@ -74,7 +74,7 @@ public static class CameraFrameFilter
             return dst;
         }
     }
-    private static Mat RemoveSpecularGlare(Mat src, CameraFilterSettings settings)
+    private static Mat RemoveSpecularGlare(Mat src)
     {
         var result = new Mat();
         using var hsv = new Mat();
@@ -86,17 +86,8 @@ public static class CameraFrameFilter
 
         // Low saturation and high value select near-white highlights, not proven glare.
         // Bright defects can also match; restrict the inpaint area conservatively.
-        Cv2.InRange(
-            hsv,
-            new Scalar(
-                Math.Clamp(Math.Min(settings.HueMin, settings.HueMax), 0, 179),
-                Math.Clamp(Math.Min(settings.SaturationMin, settings.SaturationMax), 0, 255),
-                Math.Clamp(Math.Min(settings.ValueMin, settings.ValueMax), 0, 255)),
-            new Scalar(
-                Math.Clamp(Math.Max(settings.HueMin, settings.HueMax), 0, 179),
-                Math.Clamp(Math.Max(settings.SaturationMin, settings.SaturationMax), 0, 255),
-                Math.Clamp(Math.Max(settings.ValueMin, settings.ValueMax), 0, 255)),
-            glareMask);
+        // Fixed HSV range restored: H 0..179, S 0..40, V 245..255.
+        Cv2.InRange(hsv, new Scalar(0, 0, 245), new Scalar(179, 40, 255), glareMask);
 
         Cv2.MorphologyEx(
             glareMask, glareMask, MorphTypes.Close, kernel,

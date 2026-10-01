@@ -73,18 +73,11 @@ Check(Cv2.CountNonZero(noiseEdges) == 0, "low-amplitude noise does not create co
 var hsvOnly = new CameraFilterSettings { ClaheEnabled = false, GammaEnabled = false };
 using var hsvResult = CameraFrameFilter.Apply(nearGlare, hsvOnly);
 Check(hsvResult.At<Vec3b>(80, 80).Item0 < 220, "HSV works independently");
-using var excludedValue = CameraFrameFilter.Apply(nearGlare, hsvOnly with { ValueMin = 250 });
-Check(Cv2.Norm(nearGlare, excludedValue) == 0, "V slider excludes highlight below threshold");
-using var excludedHue = CameraFrameFilter.Apply(nearGlare, hsvOnly with { HueMin = 20 });
-Check(Cv2.Norm(nearGlare, excludedHue) == 0, "H slider changes selected region");
-using var excludedSaturation = CameraFrameFilter.Apply(nearGlare, hsvOnly with { SaturationMin = 10 });
-Check(Cv2.Norm(nearGlare, excludedSaturation) == 0, "S slider changes selected region");
-using var normalized = CameraFrameFilter.Apply(nearGlare, hsvOnly with { ValueMin = 255, ValueMax = 245 });
-Check(Cv2.Norm(hsvResult, normalized) == 0, "reversed ranges normalize safely");
 using var gammaOnly = CameraFrameFilter.Apply(nearGlare, new() { HsvEnabled = false, ClaheEnabled = false, GammaEnabled = true });
 Check(gammaOnly.At<Vec3b>(0, 0).Item0 < 90, "gamma works while HSV is OFF");
 using var claheOnly = CameraFrameFilter.Apply(nearGlare, new() { HsvEnabled = false, ClaheEnabled = true, GammaEnabled = false });
 Check(Cv2.Norm(nearGlare, claheOnly) > 0, "CLAHE works while HSV is OFF");
-Check(hsvOnly.HueMin == 0 && hsvOnly.HueMax == 179
-    && hsvOnly.SaturationMin == 0 && hsvOnly.SaturationMax == 40
-    && hsvOnly.ValueMin == 245 && hsvOnly.ValueMax == 255, "HSV defaults match previous fixed values");
+using var hsvOff = CameraFrameFilter.Apply(nearGlare, hsvOnly with { HsvEnabled = false });
+Check(Cv2.Norm(nearGlare, hsvOff) == 0, "HSV OFF preserves original when other filters are OFF");
+using var hsvOnAgain = CameraFrameFilter.Apply(nearGlare, hsvOnly);
+Check(Cv2.Norm(hsvResult, hsvOnAgain) == 0, "HSV ON restores fixed correction after OFF");
